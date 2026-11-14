@@ -48,7 +48,7 @@ const I18N = {
         readyTitle: 'Your file is ready', save: 'Save to phone', share: 'Share / save to gallery', preparing: 'Preparing...',
         needUrl: 'Please paste a link', pasteHint: 'Long-press the field and choose "Paste"',
         loadingInfo: 'Checking the video...', error: 'Error: ', failed: 'Download failed: ', cancelled: 'Download cancelled', shareFailed: 'Share failed: ',
-        left: 'About {t} left', approxTime: '~{t}', calc: 'Estimating time left...', elapsedT: '{t}s elapsed',
+        left: 'About {t} left', approxTime: "download ~{t}", calc: 'Estimating time left...', elapsedT: '{t}s elapsed',
         st_connecting: 'Connecting to site', st_video: 'Downloading video', st_audio: 'Downloading audio',
         st_processing: 'Processing & merging', st_working: 'Downloading & processing', st_done: 'Done',
         time: { few: 'a few seconds', half: 'half a minute', min: n => n === 1 ? '1 minute' : n + ' minutes', hour: n => n === 1 ? '1 hour' : n + ' hours', and: ' ' }
@@ -66,7 +66,7 @@ const I18N = {
         readyTitle: 'הקובץ מוכן', save: 'שמור בטלפון', share: 'שתף / שמור לגלריה', preparing: 'מכין...',
         needUrl: 'נא להדביק קישור', pasteHint: 'לחץ לחיצה ארוכה בשדה ובחר "הדבק"',
         loadingInfo: 'בודק את הסרטון...', error: 'שגיאה: ', failed: 'ההורדה נכשלה: ', cancelled: 'ההורדה בוטלה', shareFailed: 'השיתוף נכשל: ',
-        left: 'עוד {t}', approxTime: 'כ-{t}', calc: 'מחשב כמה זמן נשאר...', elapsedT: 'עברו {t} שנ׳',
+        left: 'עוד {t}', approxTime: "זמן הורדה כ-{t}", calc: 'מחשב כמה זמן נשאר...', elapsedT: 'עברו {t} שנ׳',
         st_connecting: 'מתחבר לאתר', st_video: 'מוריד וידאו', st_audio: 'מוריד שמע',
         st_processing: 'מעבד ומאחד קובץ', st_working: 'מוריד ומעבד', st_done: 'מוכן',
         time: { few: 'כמה שניות', half: 'חצי דקה', min: n => n === 1 ? 'דקה' : n === 2 ? 'שתי דקות' : n + ' דקות', hour: n => n === 1 ? 'שעה' : n === 2 ? 'שעתיים' : n + ' שעות', and: ' ו-' }
@@ -84,7 +84,7 @@ const I18N = {
         readyTitle: 'الملف جاهز', save: 'حفظ على الهاتف', share: 'مشاركة / حفظ في المعرض', preparing: 'جارٍ التحضير...',
         needUrl: 'الرجاء لصق رابط', pasteHint: 'اضغط مطولاً على الحقل واختر "لصق"',
         loadingInfo: 'جارٍ فحص الفيديو...', error: 'خطأ: ', failed: 'فشل التنزيل: ', cancelled: 'تم إلغاء التنزيل', shareFailed: 'فشلت المشاركة: ',
-        left: 'متبقٍ {t}', approxTime: 'حوالي {t}', calc: 'جارٍ حساب الوقت المتبقي...', elapsedT: 'مرّت {t} ث',
+        left: 'متبقٍ {t}', approxTime: "وقت التنزيل حوالي {t}", calc: 'جارٍ حساب الوقت المتبقي...', elapsedT: 'مرّت {t} ث',
         st_connecting: 'جارٍ الاتصال بالموقع', st_video: 'جارٍ تنزيل الفيديو', st_audio: 'جارٍ تنزيل الصوت',
         st_processing: 'جارٍ المعالجة والدمج', st_working: 'جارٍ التنزيل والمعالجة', st_done: 'جاهز',
         time: { few: 'بضع ثوانٍ', half: 'نصف دقيقة', min: n => n === 1 ? 'دقيقة' : n === 2 ? 'دقيقتان' : n <= 10 ? n + ' دقائق' : n + ' دقيقة', hour: n => n === 1 ? 'ساعة' : n === 2 ? 'ساعتان' : n <= 10 ? n + ' ساعات' : n + ' ساعة', and: ' و' }
@@ -102,7 +102,7 @@ const I18N = {
         readyTitle: 'Tu archivo está listo', save: 'Guardar en el teléfono', share: 'Compartir / guardar en galería', preparing: 'Preparando...',
         needUrl: 'Pega un enlace', pasteHint: 'Mantén pulsado el campo y elige "Pegar"',
         loadingInfo: 'Comprobando el vídeo...', error: 'Error: ', failed: 'Error en la descarga: ', cancelled: 'Descarga cancelada', shareFailed: 'Error al compartir: ',
-        left: 'Tiempo restante: {t}', approxTime: '~{t}', calc: 'Calculando el tiempo restante...', elapsedT: '{t} s transcurridos',
+        left: 'Tiempo restante: {t}', approxTime: "descarga ~{t}", calc: 'Calculando el tiempo restante...', elapsedT: '{t} s transcurridos',
         st_connecting: 'Conectando con el sitio', st_video: 'Descargando vídeo', st_audio: 'Descargando audio',
         st_processing: 'Procesando y uniendo', st_working: 'Descargando y procesando', st_done: 'Listo',
         time: { few: 'unos segundos', half: 'medio minuto', min: n => n === 1 ? '1 minuto' : n + ' minutos', hour: n => n === 1 ? '1 hora' : n + ' horas', and: ' y ' }
@@ -120,7 +120,7 @@ const I18N = {
         readyTitle: 'Seu arquivo está pronto', save: 'Salvar no celular', share: 'Compartilhar / salvar na galeria', preparing: 'Preparando...',
         needUrl: 'Cole um link', pasteHint: 'Toque e segure o campo e escolha "Colar"',
         loadingInfo: 'Verificando o vídeo...', error: 'Erro: ', failed: 'Falha no download: ', cancelled: 'Download cancelado', shareFailed: 'Falha ao compartilhar: ',
-        left: 'Tempo restante: {t}', approxTime: '~{t}', calc: 'Calculando o tempo restante...', elapsedT: '{t} s decorridos',
+        left: 'Tempo restante: {t}', approxTime: "download ~{t}", calc: 'Calculando o tempo restante...', elapsedT: '{t} s decorridos',
         st_connecting: 'Conectando ao site', st_video: 'Baixando vídeo', st_audio: 'Baixando áudio',
         st_processing: 'Processando e juntando', st_working: 'Baixando e processando', st_done: 'Pronto',
         time: { few: 'alguns segundos', half: 'meio minuto', min: n => n === 1 ? '1 minuto' : n + ' minutos', hour: n => n === 1 ? '1 hora' : n + ' horas', and: ' e ' }
@@ -138,7 +138,7 @@ const I18N = {
         readyTitle: 'Votre fichier est prêt', save: 'Enregistrer sur le téléphone', share: 'Partager / enregistrer dans la galerie', preparing: 'Préparation...',
         needUrl: 'Veuillez coller un lien', pasteHint: 'Appuyez longuement sur le champ et choisissez « Coller »',
         loadingInfo: 'Vérification de la vidéo...', error: 'Erreur : ', failed: 'Échec du téléchargement : ', cancelled: 'Téléchargement annulé', shareFailed: 'Échec du partage : ',
-        left: 'Encore {t}', approxTime: '~{t}', calc: 'Calcul du temps restant...', elapsedT: '{t} s écoulées',
+        left: 'Encore {t}', approxTime: "téléchargement ~{t}", calc: 'Calcul du temps restant...', elapsedT: '{t} s écoulées',
         st_connecting: 'Connexion au site', st_video: 'Téléchargement de la vidéo', st_audio: "Téléchargement de l'audio",
         st_processing: 'Traitement et fusion', st_working: 'Téléchargement et traitement', st_done: 'Terminé',
         time: { few: 'quelques secondes', half: 'une demi-minute', min: n => n === 1 ? '1 minute' : n + ' minutes', hour: n => n === 1 ? '1 heure' : n + ' heures', and: ' et ' }
@@ -156,7 +156,7 @@ const I18N = {
         readyTitle: 'Deine Datei ist fertig', save: 'Aufs Handy speichern', share: 'Teilen / in Galerie speichern', preparing: 'Wird vorbereitet...',
         needUrl: 'Bitte einen Link einfügen', pasteHint: 'Feld lange drücken und „Einfügen“ wählen',
         loadingInfo: 'Video wird geprüft...', error: 'Fehler: ', failed: 'Download fehlgeschlagen: ', cancelled: 'Download abgebrochen', shareFailed: 'Teilen fehlgeschlagen: ',
-        left: 'Noch {t}', approxTime: '~{t}', calc: 'Restzeit wird berechnet...', elapsedT: '{t} s vergangen',
+        left: 'Noch {t}', approxTime: "Download ~{t}", calc: 'Restzeit wird berechnet...', elapsedT: '{t} s vergangen',
         st_connecting: 'Verbinde mit der Seite', st_video: 'Video wird geladen', st_audio: 'Audio wird geladen',
         st_processing: 'Verarbeiten & zusammenfügen', st_working: 'Laden & verarbeiten', st_done: 'Fertig',
         time: { few: 'wenige Sekunden', half: 'eine halbe Minute', min: n => n === 1 ? '1 Minute' : n + ' Minuten', hour: n => n === 1 ? '1 Stunde' : n + ' Stunden', and: ' und ' }
@@ -174,7 +174,7 @@ const I18N = {
         readyTitle: 'Il file è pronto', save: 'Salva sul telefono', share: 'Condividi / salva in galleria', preparing: 'Preparazione...',
         needUrl: 'Incolla un link', pasteHint: 'Tieni premuto il campo e scegli "Incolla"',
         loadingInfo: 'Controllo del video...', error: 'Errore: ', failed: 'Download non riuscito: ', cancelled: 'Download annullato', shareFailed: 'Condivisione non riuscita: ',
-        left: 'Tempo rimanente: {t}', approxTime: '~{t}', calc: 'Calcolo del tempo rimanente...', elapsedT: '{t} s trascorsi',
+        left: 'Tempo rimanente: {t}', approxTime: "download ~{t}", calc: 'Calcolo del tempo rimanente...', elapsedT: '{t} s trascorsi',
         st_connecting: 'Connessione al sito', st_video: 'Download del video', st_audio: "Download dell'audio",
         st_processing: 'Elaborazione e unione', st_working: 'Download ed elaborazione', st_done: 'Fatto',
         time: { few: 'pochi secondi', half: 'mezzo minuto', min: n => n === 1 ? '1 minuto' : n + ' minuti', hour: n => n === 1 ? '1 ora' : n + ' ore', and: ' e ' }
@@ -192,7 +192,7 @@ const I18N = {
         readyTitle: 'Файл готов', save: 'Сохранить на телефон', share: 'Поделиться / в галерею', preparing: 'Подготовка...',
         needUrl: 'Вставьте ссылку', pasteHint: 'Нажмите и удерживайте поле, затем «Вставить»',
         loadingInfo: 'Проверяем видео...', error: 'Ошибка: ', failed: 'Ошибка загрузки: ', cancelled: 'Загрузка отменена', shareFailed: 'Не удалось поделиться: ',
-        left: 'Осталось {t}', approxTime: '~{t}', calc: 'Считаем оставшееся время...', elapsedT: 'прошло {t} с',
+        left: 'Осталось {t}', approxTime: "загрузка ~{t}", calc: 'Считаем оставшееся время...', elapsedT: 'прошло {t} с',
         st_connecting: 'Подключение к сайту', st_video: 'Загрузка видео', st_audio: 'Загрузка звука',
         st_processing: 'Обработка и склейка', st_working: 'Загрузка и обработка', st_done: 'Готово',
         time: { few: 'несколько секунд', half: 'полминуты', min: n => n + ' ' + plural3(n, 'минута', 'минуты', 'минут'), hour: n => n + ' ' + plural3(n, 'час', 'часа', 'часов'), and: ' ' }
@@ -210,7 +210,7 @@ const I18N = {
         readyTitle: 'Dosyan hazır', save: 'Telefona kaydet', share: 'Paylaş / galeriye kaydet', preparing: 'Hazırlanıyor...',
         needUrl: 'Lütfen bir bağlantı yapıştır', pasteHint: 'Alana uzun bas ve "Yapıştır"ı seç',
         loadingInfo: 'Video kontrol ediliyor...', error: 'Hata: ', failed: 'İndirme başarısız: ', cancelled: 'İndirme iptal edildi', shareFailed: 'Paylaşım başarısız: ',
-        left: '{t} kaldı', approxTime: '~{t}', calc: 'Kalan süre hesaplanıyor...', elapsedT: '{t} sn geçti',
+        left: '{t} kaldı', approxTime: "indirme ~{t}", calc: 'Kalan süre hesaplanıyor...', elapsedT: '{t} sn geçti',
         st_connecting: 'Siteye bağlanılıyor', st_video: 'Video indiriliyor', st_audio: 'Ses indiriliyor',
         st_processing: 'İşleniyor ve birleştiriliyor', st_working: 'İndiriliyor ve işleniyor', st_done: 'Hazır',
         time: { few: 'birkaç saniye', half: 'yarım dakika', min: n => n + ' dakika', hour: n => n + ' saat', and: ' ' }
@@ -228,7 +228,7 @@ const I18N = {
         readyTitle: 'فایل آماده است', save: 'ذخیره در گوشی', share: 'اشتراک / ذخیره در گالری', preparing: 'در حال آماده‌سازی...',
         needUrl: 'لطفاً یک لینک بچسبانید', pasteHint: 'روی کادر نگه دارید و «چسباندن» را بزنید',
         loadingInfo: 'در حال بررسی ویدیو...', error: 'خطا: ', failed: 'دانلود ناموفق: ', cancelled: 'دانلود لغو شد', shareFailed: 'اشتراک ناموفق: ',
-        left: '{t} مانده', approxTime: 'حدود {t}', calc: 'در حال محاسبه زمان باقی‌مانده...', elapsedT: '{t} ثانیه گذشت',
+        left: '{t} مانده', approxTime: "زمان دانلود حدود {t}", calc: 'در حال محاسبه زمان باقی‌مانده...', elapsedT: '{t} ثانیه گذشت',
         st_connecting: 'اتصال به سایت', st_video: 'دانلود ویدیو', st_audio: 'دانلود صدا',
         st_processing: 'پردازش و ادغام', st_working: 'دانلود و پردازش', st_done: 'آماده',
         time: { few: 'چند ثانیه', half: 'نیم دقیقه', min: n => n + ' دقیقه', hour: n => n + ' ساعت', and: ' و ' }
@@ -246,7 +246,7 @@ const I18N = {
         readyTitle: 'فائل تیار ہے', save: 'فون میں محفوظ کریں', share: 'شیئر / گیلری میں محفوظ کریں', preparing: 'تیاری ہو رہی ہے...',
         needUrl: 'براہ کرم لنک پیسٹ کریں', pasteHint: 'خانے کو دبا کر رکھیں اور "پیسٹ" چنیں',
         loadingInfo: 'ویڈیو چیک ہو رہی ہے...', error: 'خرابی: ', failed: 'ڈاؤن لوڈ ناکام: ', cancelled: 'ڈاؤن لوڈ منسوخ', shareFailed: 'شیئر ناکام: ',
-        left: '{t} باقی', approxTime: 'تقریباً {t}', calc: 'باقی وقت کا حساب...', elapsedT: '{t} سیکنڈ گزر گئے',
+        left: '{t} باقی', approxTime: "ڈاؤن لوڈ تقریباً {t}", calc: 'باقی وقت کا حساب...', elapsedT: '{t} سیکنڈ گزر گئے',
         st_connecting: 'سائٹ سے رابطہ', st_video: 'ویڈیو ڈاؤن لوڈ ہو رہی ہے', st_audio: 'آڈیو ڈاؤن لوڈ ہو رہی ہے',
         st_processing: 'پروسیسنگ اور جوڑنا', st_working: 'ڈاؤن لوڈ اور پروسیسنگ', st_done: 'تیار',
         time: { few: 'چند سیکنڈ', half: 'آدھا منٹ', min: n => n + ' منٹ', hour: n => n + ' گھنٹے', and: ' اور ' }
@@ -264,7 +264,7 @@ const I18N = {
         readyTitle: 'आपकी फ़ाइल तैयार है', save: 'फ़ोन में सेव करें', share: 'शेयर / गैलरी में सेव करें', preparing: 'तैयार हो रहा है...',
         needUrl: 'कृपया लिंक पेस्ट करें', pasteHint: 'फ़ील्ड को दबाकर रखें और "पेस्ट" चुनें',
         loadingInfo: 'वीडियो जाँचा जा रहा है...', error: 'त्रुटि: ', failed: 'डाउनलोड विफल: ', cancelled: 'डाउनलोड रद्द', shareFailed: 'शेयर विफल: ',
-        left: '{t} बाकी', approxTime: 'लगभग {t}', calc: 'बाकी समय निकाला जा रहा है...', elapsedT: '{t} सेकंड बीते',
+        left: '{t} बाकी', approxTime: "डाउनलोड लगभग {t}", calc: 'बाकी समय निकाला जा रहा है...', elapsedT: '{t} सेकंड बीते',
         st_connecting: 'साइट से जुड़ रहे हैं', st_video: 'वीडियो डाउनलोड हो रहा है', st_audio: 'ऑडियो डाउनलोड हो रहा है',
         st_processing: 'प्रोसेस और जोड़ रहे हैं', st_working: 'डाउनलोड और प्रोसेस', st_done: 'तैयार',
         time: { few: 'कुछ सेकंड', half: 'आधा मिनट', min: n => n + ' मिनट', hour: n => n + ' घंटे', and: ' ' }
@@ -282,7 +282,7 @@ const I18N = {
         readyTitle: 'ফাইল প্রস্তুত', save: 'ফোনে সেভ করুন', share: 'শেয়ার / গ্যালারিতে সেভ', preparing: 'প্রস্তুত হচ্ছে...',
         needUrl: 'একটি লিংক পেস্ট করুন', pasteHint: 'ঘরটি চেপে ধরে "পেস্ট" বেছে নিন',
         loadingInfo: 'ভিডিও যাচাই হচ্ছে...', error: 'ত্রুটি: ', failed: 'ডাউনলোড ব্যর্থ: ', cancelled: 'ডাউনলোড বাতিল', shareFailed: 'শেয়ার ব্যর্থ: ',
-        left: 'আর {t}', approxTime: 'প্রায় {t}', calc: 'বাকি সময় হিসাব হচ্ছে...', elapsedT: '{t} সেকেন্ড গেছে',
+        left: 'আর {t}', approxTime: "ডাউনলোড প্রায় {t}", calc: 'বাকি সময় হিসাব হচ্ছে...', elapsedT: '{t} সেকেন্ড গেছে',
         st_connecting: 'সাইটে সংযোগ', st_video: 'ভিডিও ডাউনলোড হচ্ছে', st_audio: 'অডিও ডাউনলোড হচ্ছে',
         st_processing: 'প্রসেস ও জোড়া হচ্ছে', st_working: 'ডাউনলোড ও প্রসেস', st_done: 'প্রস্তুত',
         time: { few: 'কয়েক সেকেন্ড', half: 'আধা মিনিট', min: n => n + ' মিনিট', hour: n => n + ' ঘণ্টা', and: ' ' }
@@ -300,7 +300,7 @@ const I18N = {
         readyTitle: 'File siap', save: 'Simpan ke ponsel', share: 'Bagikan / simpan ke galeri', preparing: 'Menyiapkan...',
         needUrl: 'Tempel tautan dulu', pasteHint: 'Tekan lama kolom lalu pilih "Tempel"',
         loadingInfo: 'Memeriksa video...', error: 'Kesalahan: ', failed: 'Unduhan gagal: ', cancelled: 'Unduhan dibatalkan', shareFailed: 'Gagal membagikan: ',
-        left: '{t} lagi', approxTime: '~{t}', calc: 'Menghitung sisa waktu...', elapsedT: '{t} dtk berlalu',
+        left: '{t} lagi', approxTime: "unduh ~{t}", calc: 'Menghitung sisa waktu...', elapsedT: '{t} dtk berlalu',
         st_connecting: 'Menghubungkan ke situs', st_video: 'Mengunduh video', st_audio: 'Mengunduh audio',
         st_processing: 'Memproses & menggabungkan', st_working: 'Mengunduh & memproses', st_done: 'Selesai',
         time: { few: 'beberapa detik', half: 'setengah menit', min: n => n + ' menit', hour: n => n + ' jam', and: ' ' }
@@ -318,7 +318,7 @@ const I18N = {
         readyTitle: 'Tệp đã sẵn sàng', save: 'Lưu vào điện thoại', share: 'Chia sẻ / lưu vào thư viện', preparing: 'Đang chuẩn bị...',
         needUrl: 'Vui lòng dán liên kết', pasteHint: 'Nhấn giữ ô nhập và chọn "Dán"',
         loadingInfo: 'Đang kiểm tra video...', error: 'Lỗi: ', failed: 'Tải thất bại: ', cancelled: 'Đã hủy tải', shareFailed: 'Chia sẻ thất bại: ',
-        left: 'Còn {t}', approxTime: '~{t}', calc: 'Đang tính thời gian còn lại...', elapsedT: 'Đã qua {t} giây',
+        left: 'Còn {t}', approxTime: "tải ~{t}", calc: 'Đang tính thời gian còn lại...', elapsedT: 'Đã qua {t} giây',
         st_connecting: 'Đang kết nối trang', st_video: 'Đang tải video', st_audio: 'Đang tải âm thanh',
         st_processing: 'Đang xử lý & ghép', st_working: 'Đang tải & xử lý', st_done: 'Xong',
         time: { few: 'vài giây', half: 'nửa phút', min: n => n + ' phút', hour: n => n + ' giờ', and: ' ' }
@@ -336,7 +336,7 @@ const I18N = {
         readyTitle: 'ไฟล์พร้อมแล้ว', save: 'บันทึกลงโทรศัพท์', share: 'แชร์ / บันทึกลงแกลเลอรี', preparing: 'กำลังเตรียม...',
         needUrl: 'กรุณาวางลิงก์', pasteHint: 'กดค้างที่ช่องแล้วเลือก "วาง"',
         loadingInfo: 'กำลังตรวจสอบวิดีโอ...', error: 'ข้อผิดพลาด: ', failed: 'ดาวน์โหลดไม่สำเร็จ: ', cancelled: 'ยกเลิกการดาวน์โหลดแล้ว', shareFailed: 'แชร์ไม่สำเร็จ: ',
-        left: 'อีก {t}', approxTime: 'ประมาณ {t}', calc: 'กำลังคำนวณเวลาที่เหลือ...', elapsedT: 'ผ่านไป {t} วินาที',
+        left: 'อีก {t}', approxTime: "ดาวน์โหลดประมาณ {t}", calc: 'กำลังคำนวณเวลาที่เหลือ...', elapsedT: 'ผ่านไป {t} วินาที',
         st_connecting: 'กำลังเชื่อมต่อเว็บไซต์', st_video: 'กำลังดาวน์โหลดวิดีโอ', st_audio: 'กำลังดาวน์โหลดเสียง',
         st_processing: 'กำลังประมวลผลและรวมไฟล์', st_working: 'กำลังดาวน์โหลดและประมวลผล', st_done: 'เสร็จแล้ว',
         time: { few: 'ไม่กี่วินาที', half: 'ครึ่งนาที', min: n => n + ' นาที', hour: n => n + ' ชั่วโมง', and: ' ' }
@@ -354,7 +354,7 @@ const I18N = {
         readyTitle: '文件已就绪', save: '保存到手机', share: '分享 / 保存到相册', preparing: '准备中...',
         needUrl: '请粘贴链接', pasteHint: '长按输入框并选择“粘贴”',
         loadingInfo: '正在检查视频...', error: '错误：', failed: '下载失败：', cancelled: '已取消下载', shareFailed: '分享失败：',
-        left: '还剩{t}', approxTime: '约{t}', calc: '正在计算剩余时间...', elapsedT: '已过 {t} 秒',
+        left: '还剩{t}', approxTime: "下载约{t}", calc: '正在计算剩余时间...', elapsedT: '已过 {t} 秒',
         st_connecting: '正在连接网站', st_video: '正在下载视频', st_audio: '正在下载音频',
         st_processing: '正在处理合并', st_working: '正在下载并处理', st_done: '完成',
         time: { few: '几秒', half: '半分钟', min: n => n + ' 分钟', hour: n => n + ' 小时', and: ' ' }
@@ -372,7 +372,7 @@ const I18N = {
         readyTitle: 'ファイルの準備ができました', save: 'スマホに保存', share: '共有 / ギャラリーに保存', preparing: '準備中...',
         needUrl: 'リンクを貼り付けてください', pasteHint: '入力欄を長押しして「貼り付け」を選択',
         loadingInfo: '動画を確認中...', error: 'エラー：', failed: 'ダウンロード失敗：', cancelled: 'ダウンロードをキャンセルしました', shareFailed: '共有に失敗：',
-        left: 'あと{t}', approxTime: '約{t}', calc: '残り時間を計算中...', elapsedT: '{t}秒経過',
+        left: 'あと{t}', approxTime: "ダウンロード約{t}", calc: '残り時間を計算中...', elapsedT: '{t}秒経過',
         st_connecting: 'サイトに接続中', st_video: '動画をダウンロード中', st_audio: '音声をダウンロード中',
         st_processing: '処理・結合中', st_working: 'ダウンロード・処理中', st_done: '完了',
         time: { few: '数秒', half: '30秒', min: n => n + '分', hour: n => n + '時間', and: '' }
@@ -390,7 +390,7 @@ const I18N = {
         readyTitle: '파일이 준비되었습니다', save: '휴대폰에 저장', share: '공유 / 갤러리에 저장', preparing: '준비 중...',
         needUrl: '링크를 붙여넣어 주세요', pasteHint: '입력란을 길게 눌러 "붙여넣기"를 선택하세요',
         loadingInfo: '동영상 확인 중...', error: '오류: ', failed: '다운로드 실패: ', cancelled: '다운로드 취소됨', shareFailed: '공유 실패: ',
-        left: '{t} 남음', approxTime: '약 {t}', calc: '남은 시간 계산 중...', elapsedT: '{t}초 경과',
+        left: '{t} 남음', approxTime: "다운로드 약 {t}", calc: '남은 시간 계산 중...', elapsedT: '{t}초 경과',
         st_connecting: '사이트 연결 중', st_video: '동영상 다운로드 중', st_audio: '오디오 다운로드 중',
         st_processing: '처리 및 병합 중', st_working: '다운로드 및 처리 중', st_done: '완료',
         time: { few: '몇 초', half: '30초', min: n => n + '분', hour: n => n + '시간', and: ' ' }
