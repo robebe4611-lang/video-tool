@@ -73,6 +73,15 @@ function buildOptions(info) {
     const maxH = videos.reduce((m, f) => Math.max(m, f.height || 0), info.height || 0);
 
     const opts = [];
+    // Some sites (direct files, simple players) report no resolution at all:
+    // still offer every video option instead of hiding them.
+    if (!videos.length) {
+        const any = formats.filter(f => f.vcodec !== 'none').pop() || info;
+        const size = fmtSize(any, d);
+        for (const q of [1080, 720, 480]) opts.push({ quality: String(q), available: true, height: 0, size });
+        opts.push({ quality: 'mp3', available: true, height: 0, size: d ? Math.round(190 * 125 * d) : 0 });
+        return opts;
+    }
     for (const q of [1080, 720, 480]) {
         // mirror the download format choice: phone-friendly (H.264 / MP4) first
         const friendly = f => /avc1/.test(f.vcodec || '') || f.ext === 'mp4';
