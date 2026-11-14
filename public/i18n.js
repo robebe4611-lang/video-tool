@@ -35,6 +35,7 @@ const RTL = ['he', 'ar', 'fa', 'ur'];
 
 const I18N = {
     en: {
+        bigFileHint: "Large file: tap Save, then share it from your gallery or Files app.",
         language: 'Language', title: 'Video Download & Trim', placeholder: 'Paste a video link',
         step1: 'Video link', step2: 'What to download?', paste: 'Paste',
         o1080: 'Full HD', o1080d: 'Highest quality', o720: 'HD', o720d: 'Recommended balance',
@@ -52,6 +53,7 @@ const I18N = {
         time: { few: 'a few seconds', half: 'half a minute', min: n => n === 1 ? '1 minute' : n + ' minutes', hour: n => n === 1 ? '1 hour' : n + ' hours', and: ' ' }
     },
     he: {
+        bigFileHint: "קובץ גדול: לחץ \"שמור בטלפון\", ואז שתף אותו מהגלריה או מאפליקציית הקבצים.",
         language: 'שפה', title: 'הורדה וחיתוך וידאו', placeholder: 'הדבק קישור לסרטון',
         step1: 'קישור לסרטון', step2: 'מה להוריד?', paste: 'הדבק',
         o1080d: 'האיכות הכי גבוהה', o720d: 'מומלץ, איזון טוב', o480: 'קל', o480d: 'מהיר, לוואטסאפ', omp3d: 'שמע בלבד',
@@ -68,6 +70,7 @@ const I18N = {
         time: { few: 'כמה שניות', half: 'חצי דקה', min: n => n === 1 ? 'דקה' : n === 2 ? 'שתי דקות' : n + ' דקות', hour: n => n === 1 ? 'שעה' : n === 2 ? 'שעתיים' : n + ' שעות', and: ' ו-' }
     },
     ar: {
+        bigFileHint: "ملف كبير: اضغط \"حفظ على الهاتف\" ثم شاركه من المعرض أو تطبيق الملفات.",
         language: 'اللغة', title: 'تنزيل وقص الفيديو', placeholder: 'الصق رابط الفيديو',
         step1: 'رابط الفيديو', step2: 'ماذا تريد أن تنزّل؟', paste: 'لصق',
         o1080d: 'أعلى جودة', o720d: 'موصى به، توازن جيد', o480: 'خفيف', o480d: 'سريع، للواتساب', omp3d: 'صوت فقط',
@@ -84,6 +87,7 @@ const I18N = {
         time: { few: 'بضع ثوانٍ', half: 'نصف دقيقة', min: n => n === 1 ? 'دقيقة' : n === 2 ? 'دقيقتان' : n <= 10 ? n + ' دقائق' : n + ' دقيقة', hour: n => n === 1 ? 'ساعة' : n === 2 ? 'ساعتان' : n <= 10 ? n + ' ساعات' : n + ' ساعة', and: ' و' }
     },
     es: {
+        bigFileHint: "Archivo grande: pulsa Guardar y compártelo desde la galería o Archivos.",
         language: 'Idioma', title: 'Descargar y recortar vídeo', placeholder: 'Pega el enlace del vídeo',
         step1: 'Enlace del vídeo', step2: '¿Qué quieres descargar?', paste: 'Pegar',
         o1080d: 'Máxima calidad', o720d: 'Recomendado', o480: 'Ligero', o480d: 'Rápido, para WhatsApp', omp3d: 'Solo audio',
@@ -100,6 +104,7 @@ const I18N = {
         time: { few: 'unos segundos', half: 'medio minuto', min: n => n === 1 ? '1 minuto' : n + ' minutos', hour: n => n === 1 ? '1 hora' : n + ' horas', and: ' y ' }
     },
     pt: {
+        bigFileHint: "Arquivo grande: toque em Salvar e compartilhe pela galeria ou Arquivos.",
         language: 'Idioma', title: 'Baixar e cortar vídeo', placeholder: 'Cole o link do vídeo',
         step1: 'Link do vídeo', step2: 'O que baixar?', paste: 'Colar',
         o1080d: 'Melhor qualidade', o720d: 'Recomendado', o480: 'Leve', o480d: 'Rápido, para WhatsApp', omp3d: 'Só áudio',
@@ -116,6 +121,7 @@ const I18N = {
         time: { few: 'alguns segundos', half: 'meio minuto', min: n => n === 1 ? '1 minuto' : n + ' minutos', hour: n => n === 1 ? '1 hora' : n + ' horas', and: ' e ' }
     },
     fr: {
+        bigFileHint: "Fichier volumineux : appuyez sur Enregistrer, puis partagez-le depuis la galerie ou Fichiers.",
         language: 'Langue', title: 'Télécharger et couper une vidéo', placeholder: 'Collez le lien de la vidéo',
         step1: 'Lien de la vidéo', step2: 'Que télécharger ?', paste: 'Coller',
         o1080d: 'Meilleure qualité', o720d: 'Recommandé', o480: 'Léger', o480d: 'Rapide, pour WhatsApp', omp3d: 'Audio seul',
@@ -132,6 +138,7 @@ const I18N = {
         time: { few: 'quelques secondes', half: 'une demi-minute', min: n => n === 1 ? '1 minute' : n + ' minutes', hour: n => n === 1 ? '1 heure' : n + ' heures', and: ' et ' }
     },
     de: {
+        bigFileHint: "Große Datei: Tippe auf Speichern und teile sie dann aus der Galerie oder Dateien.",
         language: 'Sprache', title: 'Video herunterladen & schneiden', placeholder: 'Video-Link einfügen',
         step1: 'Video-Link', step2: 'Was herunterladen?', paste: 'Einfügen',
         o1080d: 'Höchste Qualität', o720d: 'Empfohlen', o480: 'Leicht', o480d: 'Schnell, für WhatsApp', omp3d: 'Nur Audio',
@@ -148,6 +155,7 @@ const I18N = {
         time: { few: 'wenige Sekunden', half: 'eine halbe Minute', min: n => n === 1 ? '1 Minute' : n + ' Minuten', hour: n => n === 1 ? '1 Stunde' : n + ' Stunden', and: ' und ' }
     },
     it: {
+        bigFileHint: "File grande: tocca Salva, poi condividilo dalla galleria o da File.",
         language: 'Lingua', title: 'Scarica e taglia video', placeholder: 'Incolla il link del video',
         step1: 'Link del video', step2: 'Cosa scaricare?', paste: 'Incolla',
         o1080d: 'Massima qualità', o720d: 'Consigliato', o480: 'Leggero', o480d: 'Veloce, per WhatsApp', omp3d: 'Solo audio',
@@ -164,6 +172,7 @@ const I18N = {
         time: { few: 'pochi secondi', half: 'mezzo minuto', min: n => n === 1 ? '1 minuto' : n + ' minuti', hour: n => n === 1 ? '1 ora' : n + ' ore', and: ' e ' }
     },
     ru: {
+        bigFileHint: "Большой файл: нажмите «Сохранить», затем поделитесь им из галереи или «Файлов».",
         language: 'Язык', title: 'Скачать и обрезать видео', placeholder: 'Вставьте ссылку на видео',
         step1: 'Ссылка на видео', step2: 'Что скачать?', paste: 'Вставить',
         o1080d: 'Лучшее качество', o720d: 'Рекомендуется', o480: 'Лёгкое', o480d: 'Быстро, для WhatsApp', omp3d: 'Только звук',
@@ -180,6 +189,7 @@ const I18N = {
         time: { few: 'несколько секунд', half: 'полминуты', min: n => n + ' ' + plural3(n, 'минута', 'минуты', 'минут'), hour: n => n + ' ' + plural3(n, 'час', 'часа', 'часов'), and: ' ' }
     },
     tr: {
+        bigFileHint: "Büyük dosya: Kaydet'e dokun, sonra galeriden veya Dosyalar'dan paylaş.",
         language: 'Dil', title: 'Video İndir ve Kes', placeholder: 'Video bağlantısını yapıştır',
         step1: 'Video bağlantısı', step2: 'Ne indirilsin?', paste: 'Yapıştır',
         o1080d: 'En yüksek kalite', o720d: 'Önerilen', o480: 'Hafif', o480d: 'Hızlı, WhatsApp için', omp3d: 'Yalnızca ses',
@@ -196,6 +206,7 @@ const I18N = {
         time: { few: 'birkaç saniye', half: 'yarım dakika', min: n => n + ' dakika', hour: n => n + ' saat', and: ' ' }
     },
     fa: {
+        bigFileHint: "فایل بزرگ: «ذخیره» را بزنید و سپس از گالری یا برنامه فایل‌ها به اشتراک بگذارید.",
         language: 'زبان', title: 'دانلود و برش ویدیو', placeholder: 'لینک ویدیو را بچسبانید',
         step1: 'لینک ویدیو', step2: 'چه چیزی دانلود شود؟', paste: 'چسباندن',
         o1080d: 'بالاترین کیفیت', o720d: 'پیشنهادی', o480: 'سبک', o480d: 'سریع، برای واتساپ', omp3d: 'فقط صدا',
@@ -212,6 +223,7 @@ const I18N = {
         time: { few: 'چند ثانیه', half: 'نیم دقیقه', min: n => n + ' دقیقه', hour: n => n + ' ساعت', and: ' و ' }
     },
     ur: {
+        bigFileHint: "بڑی فائل: \"محفوظ کریں\" دبائیں، پھر گیلری یا فائلز سے شیئر کریں۔",
         language: 'زبان', title: 'ویڈیو ڈاؤن لوڈ اور کٹ', placeholder: 'ویڈیو کا لنک پیسٹ کریں',
         step1: 'ویڈیو لنک', step2: 'کیا ڈاؤن لوڈ کریں؟', paste: 'پیسٹ',
         o1080d: 'بہترین کوالٹی', o720d: 'تجویز کردہ', o480: 'ہلکا', o480d: 'تیز، واٹس ایپ کے لیے', omp3d: 'صرف آڈیو',
@@ -228,6 +240,7 @@ const I18N = {
         time: { few: 'چند سیکنڈ', half: 'آدھا منٹ', min: n => n + ' منٹ', hour: n => n + ' گھنٹے', and: ' اور ' }
     },
     hi: {
+        bigFileHint: "बड़ी फ़ाइल: सेव दबाएँ, फिर गैलरी या Files ऐप से शेयर करें।",
         language: 'भाषा', title: 'वीडियो डाउनलोड और ट्रिम', placeholder: 'वीडियो लिंक पेस्ट करें',
         step1: 'वीडियो लिंक', step2: 'क्या डाउनलोड करें?', paste: 'पेस्ट',
         o1080d: 'सबसे अच्छी क्वालिटी', o720d: 'सुझाया गया', o480: 'हल्का', o480d: 'तेज़, WhatsApp के लिए', omp3d: 'सिर्फ़ ऑडियो',
@@ -244,6 +257,7 @@ const I18N = {
         time: { few: 'कुछ सेकंड', half: 'आधा मिनट', min: n => n + ' मिनट', hour: n => n + ' घंटे', and: ' ' }
     },
     bn: {
+        bigFileHint: "বড় ফাইল: সেভ চাপুন, তারপর গ্যালারি বা Files থেকে শেয়ার করুন।",
         language: 'ভাষা', title: 'ভিডিও ডাউনলোড ও কাটুন', placeholder: 'ভিডিওর লিংক পেস্ট করুন',
         step1: 'ভিডিও লিংক', step2: 'কী ডাউনলোড করবেন?', paste: 'পেস্ট',
         o1080d: 'সর্বোচ্চ মান', o720d: 'প্রস্তাবিত', o480: 'হালকা', o480d: 'দ্রুত, WhatsApp-এর জন্য', omp3d: 'শুধু অডিও',
@@ -260,6 +274,7 @@ const I18N = {
         time: { few: 'কয়েক সেকেন্ড', half: 'আধা মিনিট', min: n => n + ' মিনিট', hour: n => n + ' ঘণ্টা', and: ' ' }
     },
     id: {
+        bigFileHint: "File besar: ketuk Simpan, lalu bagikan dari galeri atau aplikasi File.",
         language: 'Bahasa', title: 'Unduh & Potong Video', placeholder: 'Tempel tautan video',
         step1: 'Tautan video', step2: 'Unduh apa?', paste: 'Tempel',
         o1080d: 'Kualitas tertinggi', o720d: 'Disarankan', o480: 'Ringan', o480d: 'Cepat, untuk WhatsApp', omp3d: 'Audio saja',
@@ -276,6 +291,7 @@ const I18N = {
         time: { few: 'beberapa detik', half: 'setengah menit', min: n => n + ' menit', hour: n => n + ' jam', and: ' ' }
     },
     vi: {
+        bigFileHint: "Tệp lớn: nhấn Lưu, rồi chia sẻ từ thư viện hoặc ứng dụng Tệp.",
         language: 'Ngôn ngữ', title: 'Tải & cắt video', placeholder: 'Dán liên kết video',
         step1: 'Liên kết video', step2: 'Tải gì?', paste: 'Dán',
         o1080d: 'Chất lượng cao nhất', o720d: 'Khuyên dùng', o480: 'Nhẹ', o480d: 'Nhanh, cho WhatsApp', omp3d: 'Chỉ âm thanh',
@@ -292,6 +308,7 @@ const I18N = {
         time: { few: 'vài giây', half: 'nửa phút', min: n => n + ' phút', hour: n => n + ' giờ', and: ' ' }
     },
     th: {
+        bigFileHint: "ไฟล์ใหญ่: แตะบันทึก แล้วแชร์จากแกลเลอรีหรือแอปไฟล์",
         language: 'ภาษา', title: 'ดาวน์โหลดและตัดวิดีโอ', placeholder: 'วางลิงก์วิดีโอ',
         step1: 'ลิงก์วิดีโอ', step2: 'ดาวน์โหลดอะไร?', paste: 'วาง',
         o1080d: 'คุณภาพสูงสุด', o720d: 'แนะนำ', o480: 'เบา', o480d: 'เร็ว สำหรับ WhatsApp', omp3d: 'เสียงอย่างเดียว',
@@ -308,6 +325,7 @@ const I18N = {
         time: { few: 'ไม่กี่วินาที', half: 'ครึ่งนาที', min: n => n + ' นาที', hour: n => n + ' ชั่วโมง', and: ' ' }
     },
     zh: {
+        bigFileHint: "文件较大：请点“保存”，再从相册或文件应用中分享。",
         language: '语言', title: '视频下载与剪辑', placeholder: '粘贴视频链接',
         step1: '视频链接', step2: '下载什么？', paste: '粘贴',
         o1080: '全高清', o1080d: '最高画质', o720: '高清', o720d: '推荐', o480: '轻量', o480d: '快速，适合 WhatsApp', omp3d: '仅音频',
@@ -324,6 +342,7 @@ const I18N = {
         time: { few: '几秒', half: '半分钟', min: n => n + ' 分钟', hour: n => n + ' 小时', and: ' ' }
     },
     ja: {
+        bigFileHint: "大きなファイル：保存してから、ギャラリーやファイルアプリで共有してください。",
         language: '言語', title: '動画ダウンロード＆カット', placeholder: '動画のリンクを貼り付け',
         step1: '動画のリンク', step2: '何をダウンロード？', paste: '貼り付け',
         o1080d: '最高画質', o720d: 'おすすめ', o480: '軽量', o480d: '高速、WhatsApp向け', omp3d: '音声のみ',
@@ -340,6 +359,7 @@ const I18N = {
         time: { few: '数秒', half: '30秒', min: n => n + '分', hour: n => n + '時間', and: '' }
     },
     ko: {
+        bigFileHint: "큰 파일: 저장을 누른 뒤 갤러리나 파일 앱에서 공유하세요.",
         language: '언어', title: '동영상 다운로드 및 자르기', placeholder: '동영상 링크 붙여넣기',
         step1: '동영상 링크', step2: '무엇을 다운로드할까요?', paste: '붙여넣기',
         o1080d: '최고 화질', o720d: '추천', o480: '가벼움', o480d: '빠름, WhatsApp용', omp3d: '오디오만',

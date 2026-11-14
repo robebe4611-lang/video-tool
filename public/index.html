@@ -152,6 +152,7 @@
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.6 13.5 6.8 4M15.4 6.5l-6.8 4"/></svg>
             <span id="shareLabel" data-t="share"></span>
         </button>
+        <p id="doneHint" class="hidden text-xs text-zinc-500 text-center leading-relaxed" data-t="bigFileHint"></p>
     </section>
 
     <p id="statusMsg" class="hidden mt-4 text-sm text-center"></p>
@@ -486,6 +487,10 @@ function finish(j) {
     $('progressBox').classList.add('hidden');
     $('downloadBtn').disabled = false;
     doneFileName = j.fileName;
+    // Sharing loads the whole file into the browser's memory - only reliable for small files
+    const big = (j.bytes || 0) > SHARE_LIMIT;
+    $('shareBtn').classList.toggle('hidden', big);
+    $('doneHint').classList.toggle('hidden', !big);
     $('doneName').textContent = j.fileName + (j.bytes ? ' · ' + ltr(formatBytes(j.bytes)) : '');
     $('saveLink').href = '/api/job/' + j.id + '/file';
     $('doneBox').classList.remove('hidden');
@@ -510,6 +515,7 @@ function cancelDownload() {
     showStatus(t('cancelled'));
 }
 
+const SHARE_LIMIT = 60 * 1024 * 1024;
 async function shareFile() {
     const href = $('saveLink').getAttribute('href');
     const label = $('shareLabel');
