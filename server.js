@@ -425,5 +425,9 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, (err) => {
     if (err) return console.error('Server failed to start:', err.message);
     console.log(`Server running on http://localhost:${PORT}`);
+    // addresses for phones on the same Wi-Fi (much faster than the tunnel)
+    const lan = Object.values(require('os').networkInterfaces()).flat()
+        .filter(i => i && i.family === 'IPv4' && !i.internal).map(i => `http://${i.address}:${PORT}`);
+    if (lan.length) console.log('Same Wi-Fi (fast): ' + lan.join('  '));
     console.log(fs.existsSync(COOKIES_FILE) ? 'cookies.txt found - logged-in sites enabled' : 'No cookies.txt (optional)');
 });
