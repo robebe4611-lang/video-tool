@@ -35,7 +35,7 @@ const RTL = ['he', 'ar', 'fa', 'ur'];
 
 const I18N = {
     en: {
-        cutFile: "Trim this file", cutGo: "Cut", cutHint: "No re-download. Clips up to 3 minutes are cut to the exact second; longer ones are faster but may be off by a few seconds.", cutBadRange: "End must be after start", st_trimming: "Trimming",
+        cutFile: "Trim this file", cutGo: "Cut", cutHint: "No re-download needed. Works on videos of any length.", cutBadRange: "End must be after start", st_trimming: "Trimming",
         bigFileHint: "Large file: tap Save, then share it from your gallery or Files app.",
         language: 'Language', title: 'Video Download & Trim', placeholder: 'Paste a video link',
         step1: 'Video link', step2: 'What to download?', paste: 'Paste',
@@ -54,7 +54,7 @@ const I18N = {
         time: { few: 'a few seconds', half: 'half a minute', min: n => n === 1 ? '1 minute' : n + ' minutes', hour: n => n === 1 ? '1 hour' : n + ' hours', and: ' ' }
     },
     he: {
-        cutFile: "חתוך את הקובץ", cutGo: "חתוך", cutHint: "בלי להוריד שוב. קטעים עד 3 דקות נחתכים בדיוק לשנייה. ארוכים יותר נחתכים מהר, בסטייה של כמה שניות.", cutBadRange: "הסיום חייב להיות אחרי ההתחלה", st_trimming: "חותך",
+        cutFile: "חתוך את הקובץ", cutGo: "חתוך", cutHint: "בלי להוריד שוב. עובד על סרטונים בכל אורך.", cutBadRange: "הסיום חייב להיות אחרי ההתחלה", st_trimming: "חותך",
         bigFileHint: "קובץ גדול: לחץ \"שמור בטלפון\", ואז שתף אותו מהגלריה או מאפליקציית הקבצים.",
         language: 'שפה', title: 'הורדה וחיתוך וידאו', placeholder: 'הדבק קישור לסרטון',
         step1: 'קישור לסרטון', step2: 'מה להוריד?', paste: 'הדבק',
@@ -72,7 +72,7 @@ const I18N = {
         time: { few: 'כמה שניות', half: 'חצי דקה', min: n => n === 1 ? 'דקה' : n === 2 ? 'שתי דקות' : n + ' דקות', hour: n => n === 1 ? 'שעה' : n === 2 ? 'שעתיים' : n + ' שעות', and: ' ו-' }
     },
     ar: {
-        cutFile: "قص هذا الملف", cutGo: "قص", cutHint: "بدون تنزيل من جديد. المقاطع حتى 3 دقائق تُقص بدقة الثانية؛ الأطول أسرع لكن قد تختلف ببضع ثوانٍ.", cutBadRange: "يجب أن تكون النهاية بعد البداية", st_trimming: "جارٍ القص",
+        cutFile: "قص هذا الملف", cutGo: "قص", cutHint: "بدون تنزيل من جديد. يعمل مع الفيديوهات بأي طول.", cutBadRange: "يجب أن تكون النهاية بعد البداية", st_trimming: "جارٍ القص",
         bigFileHint: "ملف كبير: اضغط \"حفظ على الهاتف\" ثم شاركه من المعرض أو تطبيق الملفات.",
         language: 'اللغة', title: 'تنزيل وقص الفيديو', placeholder: 'الصق رابط الفيديو',
         step1: 'رابط الفيديو', step2: 'ماذا تريد أن تنزّل؟', paste: 'لصق',
@@ -90,7 +90,7 @@ const I18N = {
         time: { few: 'بضع ثوانٍ', half: 'نصف دقيقة', min: n => n === 1 ? 'دقيقة' : n === 2 ? 'دقيقتان' : n <= 10 ? n + ' دقائق' : n + ' دقيقة', hour: n => n === 1 ? 'ساعة' : n === 2 ? 'ساعتان' : n <= 10 ? n + ' ساعات' : n + ' ساعة', and: ' و' }
     },
     es: {
-        cutFile: "Recortar este archivo", cutGo: "Recortar", cutHint: "Sin volver a descargar. Hasta 3 minutos: corte exacto al segundo; más largos: más rápido, con unos segundos de margen.", cutBadRange: "El fin debe ser después del inicio", st_trimming: "Recortando",
+        cutFile: "Recortar este archivo", cutGo: "Recortar", cutHint: "Sin volver a descargar. Funciona con vídeos de cualquier duración.", cutBadRange: "El fin debe ser después del inicio", st_trimming: "Recortando",
         bigFileHint: "Archivo grande: pulsa Guardar y compártelo desde la galería o Archivos.",
         language: 'Idioma', title: 'Descargar y recortar vídeo', placeholder: 'Pega el enlace del vídeo',
         step1: 'Enlace del vídeo', step2: '¿Qué quieres descargar?', paste: 'Pegar',
@@ -108,7 +108,7 @@ const I18N = {
         time: { few: 'unos segundos', half: 'medio minuto', min: n => n === 1 ? '1 minuto' : n + ' minutos', hour: n => n === 1 ? '1 hora' : n + ' horas', and: ' y ' }
     },
     pt: {
-        cutFile: "Cortar este arquivo", cutGo: "Cortar", cutHint: "Sem baixar de novo. Até 3 minutos: corte exato no segundo; mais longos: mais rápido, com alguns segundos de margem.", cutBadRange: "O fim deve ser depois do início", st_trimming: "Cortando",
+        cutFile: "Cortar este arquivo", cutGo: "Cortar", cutHint: "Sem baixar de novo. Funciona com vídeos de qualquer duração.", cutBadRange: "O fim deve ser depois do início", st_trimming: "Cortando",
         bigFileHint: "Arquivo grande: toque em Salvar e compartilhe pela galeria ou Arquivos.",
         language: 'Idioma', title: 'Baixar e cortar vídeo', placeholder: 'Cole o link do vídeo',
         step1: 'Link do vídeo', step2: 'O que baixar?', paste: 'Colar',
@@ -126,7 +126,7 @@ const I18N = {
         time: { few: 'alguns segundos', half: 'meio minuto', min: n => n === 1 ? '1 minuto' : n + ' minutos', hour: n => n === 1 ? '1 hora' : n + ' horas', and: ' e ' }
     },
     fr: {
-        cutFile: "Couper ce fichier", cutGo: "Couper", cutHint: "Sans retélécharger. Jusqu'à 3 minutes : coupe à la seconde près ; au-delà : plus rapide, à quelques secondes près.", cutBadRange: "La fin doit être après le début", st_trimming: "Découpage",
+        cutFile: "Couper ce fichier", cutGo: "Couper", cutHint: "Sans retélécharger. Fonctionne avec des vidéos de toute durée.", cutBadRange: "La fin doit être après le début", st_trimming: "Découpage",
         bigFileHint: "Fichier volumineux : appuyez sur Enregistrer, puis partagez-le depuis la galerie ou Fichiers.",
         language: 'Langue', title: 'Télécharger et couper une vidéo', placeholder: 'Collez le lien de la vidéo',
         step1: 'Lien de la vidéo', step2: 'Que télécharger ?', paste: 'Coller',
@@ -144,7 +144,7 @@ const I18N = {
         time: { few: 'quelques secondes', half: 'une demi-minute', min: n => n === 1 ? '1 minute' : n + ' minutes', hour: n => n === 1 ? '1 heure' : n + ' heures', and: ' et ' }
     },
     de: {
-        cutFile: "Diese Datei schneiden", cutGo: "Schneiden", cutHint: "Ohne neuen Download. Bis 3 Minuten sekundengenau; längere Clips schneller, aber evtl. ein paar Sekunden versetzt.", cutBadRange: "Ende muss nach dem Start liegen", st_trimming: "Wird geschnitten",
+        cutFile: "Diese Datei schneiden", cutGo: "Schneiden", cutHint: "Ohne neuen Download. Funktioniert mit Videos jeder Länge.", cutBadRange: "Ende muss nach dem Start liegen", st_trimming: "Wird geschnitten",
         bigFileHint: "Große Datei: Tippe auf Speichern und teile sie dann aus der Galerie oder Dateien.",
         language: 'Sprache', title: 'Video herunterladen & schneiden', placeholder: 'Video-Link einfügen',
         step1: 'Video-Link', step2: 'Was herunterladen?', paste: 'Einfügen',
@@ -162,7 +162,7 @@ const I18N = {
         time: { few: 'wenige Sekunden', half: 'eine halbe Minute', min: n => n === 1 ? '1 Minute' : n + ' Minuten', hour: n => n === 1 ? '1 Stunde' : n + ' Stunden', and: ' und ' }
     },
     it: {
-        cutFile: "Taglia questo file", cutGo: "Taglia", cutHint: "Senza riscaricare. Fino a 3 minuti: taglio preciso al secondo; più lunghi: più veloce, con qualche secondo di scarto.", cutBadRange: "La fine deve essere dopo l'inizio", st_trimming: "Taglio in corso",
+        cutFile: "Taglia questo file", cutGo: "Taglia", cutHint: "Senza riscaricare. Funziona con video di qualsiasi durata.", cutBadRange: "La fine deve essere dopo l'inizio", st_trimming: "Taglio in corso",
         bigFileHint: "File grande: tocca Salva, poi condividilo dalla galleria o da File.",
         language: 'Lingua', title: 'Scarica e taglia video', placeholder: 'Incolla il link del video',
         step1: 'Link del video', step2: 'Cosa scaricare?', paste: 'Incolla',
@@ -180,7 +180,7 @@ const I18N = {
         time: { few: 'pochi secondi', half: 'mezzo minuto', min: n => n === 1 ? '1 minuto' : n + ' minuti', hour: n => n === 1 ? '1 ora' : n + ' ore', and: ' e ' }
     },
     ru: {
-        cutFile: "Обрезать этот файл", cutGo: "Обрезать", cutHint: "Без повторной загрузки. До 3 минут — с точностью до секунды; длиннее — быстрее, но возможна погрешность в несколько секунд.", cutBadRange: "Конец должен быть после начала", st_trimming: "Обрезка",
+        cutFile: "Обрезать этот файл", cutGo: "Обрезать", cutHint: "Без повторной загрузки. Работает с видео любой длины.", cutBadRange: "Конец должен быть после начала", st_trimming: "Обрезка",
         bigFileHint: "Большой файл: нажмите «Сохранить», затем поделитесь им из галереи или «Файлов».",
         language: 'Язык', title: 'Скачать и обрезать видео', placeholder: 'Вставьте ссылку на видео',
         step1: 'Ссылка на видео', step2: 'Что скачать?', paste: 'Вставить',
@@ -198,7 +198,7 @@ const I18N = {
         time: { few: 'несколько секунд', half: 'полминуты', min: n => n + ' ' + plural3(n, 'минута', 'минуты', 'минут'), hour: n => n + ' ' + plural3(n, 'час', 'часа', 'часов'), and: ' ' }
     },
     tr: {
-        cutFile: "Bu dosyayı kes", cutGo: "Kes", cutHint: "Yeniden indirmeden. 3 dakikaya kadar saniyesi saniyesine; daha uzunlar daha hızlı, birkaç saniye sapabilir.", cutBadRange: "Bitiş başlangıçtan sonra olmalı", st_trimming: "Kesiliyor",
+        cutFile: "Bu dosyayı kes", cutGo: "Kes", cutHint: "Yeniden indirmeden. Her uzunluktaki videoda çalışır.", cutBadRange: "Bitiş başlangıçtan sonra olmalı", st_trimming: "Kesiliyor",
         bigFileHint: "Büyük dosya: Kaydet'e dokun, sonra galeriden veya Dosyalar'dan paylaş.",
         language: 'Dil', title: 'Video İndir ve Kes', placeholder: 'Video bağlantısını yapıştır',
         step1: 'Video bağlantısı', step2: 'Ne indirilsin?', paste: 'Yapıştır',
@@ -216,7 +216,7 @@ const I18N = {
         time: { few: 'birkaç saniye', half: 'yarım dakika', min: n => n + ' dakika', hour: n => n + ' saat', and: ' ' }
     },
     fa: {
-        cutFile: "برش این فایل", cutGo: "برش", cutHint: "بدون دانلود دوباره. تا ۳ دقیقه دقیق تا ثانیه؛ طولانی‌تر سریع‌تر ولی ممکن است چند ثانیه جابه‌جا شود.", cutBadRange: "پایان باید بعد از شروع باشد", st_trimming: "در حال برش",
+        cutFile: "برش این فایل", cutGo: "برش", cutHint: "بدون دانلود دوباره. برای ویدیو با هر طولی کار می‌کند.", cutBadRange: "پایان باید بعد از شروع باشد", st_trimming: "در حال برش",
         bigFileHint: "فایل بزرگ: «ذخیره» را بزنید و سپس از گالری یا برنامه فایل‌ها به اشتراک بگذارید.",
         language: 'زبان', title: 'دانلود و برش ویدیو', placeholder: 'لینک ویدیو را بچسبانید',
         step1: 'لینک ویدیو', step2: 'چه چیزی دانلود شود؟', paste: 'چسباندن',
@@ -234,7 +234,7 @@ const I18N = {
         time: { few: 'چند ثانیه', half: 'نیم دقیقه', min: n => n + ' دقیقه', hour: n => n + ' ساعت', and: ' و ' }
     },
     ur: {
-        cutFile: "یہ فائل کاٹیں", cutGo: "کاٹیں", cutHint: "دوبارہ ڈاؤن لوڈ کے بغیر۔ 3 منٹ تک بالکل درست سیکنڈ پر؛ لمبے کلپ تیز، مگر چند سیکنڈ کا فرق ممکن۔", cutBadRange: "آخر شروع کے بعد ہونا چاہیے", st_trimming: "کاٹا جا رہا ہے",
+        cutFile: "یہ فائل کاٹیں", cutGo: "کاٹیں", cutHint: "دوبارہ ڈاؤن لوڈ کے بغیر۔ کسی بھی لمبائی کی ویڈیو پر کام کرتا ہے۔", cutBadRange: "آخر شروع کے بعد ہونا چاہیے", st_trimming: "کاٹا جا رہا ہے",
         bigFileHint: "بڑی فائل: \"محفوظ کریں\" دبائیں، پھر گیلری یا فائلز سے شیئر کریں۔",
         language: 'زبان', title: 'ویڈیو ڈاؤن لوڈ اور کٹ', placeholder: 'ویڈیو کا لنک پیسٹ کریں',
         step1: 'ویڈیو لنک', step2: 'کیا ڈاؤن لوڈ کریں؟', paste: 'پیسٹ',
@@ -252,7 +252,7 @@ const I18N = {
         time: { few: 'چند سیکنڈ', half: 'آدھا منٹ', min: n => n + ' منٹ', hour: n => n + ' گھنٹے', and: ' اور ' }
     },
     hi: {
-        cutFile: "यह फ़ाइल काटें", cutGo: "काटें", cutHint: "दोबारा डाउनलोड नहीं। 3 मिनट तक सेकंड तक सटीक; लंबे क्लिप तेज़, पर कुछ सेकंड का अंतर हो सकता है।", cutBadRange: "अंत, शुरुआत के बाद होना चाहिए", st_trimming: "काटा जा रहा है",
+        cutFile: "यह फ़ाइल काटें", cutGo: "काटें", cutHint: "दोबारा डाउनलोड नहीं। किसी भी लंबाई के वीडियो पर काम करता है।", cutBadRange: "अंत, शुरुआत के बाद होना चाहिए", st_trimming: "काटा जा रहा है",
         bigFileHint: "बड़ी फ़ाइल: सेव दबाएँ, फिर गैलरी या Files ऐप से शेयर करें।",
         language: 'भाषा', title: 'वीडियो डाउनलोड और ट्रिम', placeholder: 'वीडियो लिंक पेस्ट करें',
         step1: 'वीडियो लिंक', step2: 'क्या डाउनलोड करें?', paste: 'पेस्ट',
@@ -270,7 +270,7 @@ const I18N = {
         time: { few: 'कुछ सेकंड', half: 'आधा मिनट', min: n => n + ' मिनट', hour: n => n + ' घंटे', and: ' ' }
     },
     bn: {
-        cutFile: "এই ফাইল কাটুন", cutGo: "কাটুন", cutHint: "আবার ডাউনলোড ছাড়াই। ৩ মিনিট পর্যন্ত সেকেন্ড পর্যন্ত নির্ভুল; বড় ক্লিপ দ্রুত, তবে কয়েক সেকেন্ড এদিক-ওদিক হতে পারে।", cutBadRange: "শেষ সময় শুরুর পরে হতে হবে", st_trimming: "কাটা হচ্ছে",
+        cutFile: "এই ফাইল কাটুন", cutGo: "কাটুন", cutHint: "আবার ডাউনলোড ছাড়াই। যেকোনো দৈর্ঘ্যের ভিডিওতে কাজ করে।", cutBadRange: "শেষ সময় শুরুর পরে হতে হবে", st_trimming: "কাটা হচ্ছে",
         bigFileHint: "বড় ফাইল: সেভ চাপুন, তারপর গ্যালারি বা Files থেকে শেয়ার করুন।",
         language: 'ভাষা', title: 'ভিডিও ডাউনলোড ও কাটুন', placeholder: 'ভিডিওর লিংক পেস্ট করুন',
         step1: 'ভিডিও লিংক', step2: 'কী ডাউনলোড করবেন?', paste: 'পেস্ট',
@@ -288,7 +288,7 @@ const I18N = {
         time: { few: 'কয়েক সেকেন্ড', half: 'আধা মিনিট', min: n => n + ' মিনিট', hour: n => n + ' ঘণ্টা', and: ' ' }
     },
     id: {
-        cutFile: "Potong file ini", cutGo: "Potong", cutHint: "Tanpa unduh ulang. Hingga 3 menit dipotong tepat per detik; lebih panjang lebih cepat, bisa meleset beberapa detik.", cutBadRange: "Selesai harus setelah mulai", st_trimming: "Memotong",
+        cutFile: "Potong file ini", cutGo: "Potong", cutHint: "Tanpa unduh ulang. Bisa untuk video berapa pun panjangnya.", cutBadRange: "Selesai harus setelah mulai", st_trimming: "Memotong",
         bigFileHint: "File besar: ketuk Simpan, lalu bagikan dari galeri atau aplikasi File.",
         language: 'Bahasa', title: 'Unduh & Potong Video', placeholder: 'Tempel tautan video',
         step1: 'Tautan video', step2: 'Unduh apa?', paste: 'Tempel',
@@ -306,7 +306,7 @@ const I18N = {
         time: { few: 'beberapa detik', half: 'setengah menit', min: n => n + ' menit', hour: n => n + ' jam', and: ' ' }
     },
     vi: {
-        cutFile: "Cắt tệp này", cutGo: "Cắt", cutHint: "Không cần tải lại. Tối đa 3 phút: cắt chính xác từng giây; dài hơn: nhanh hơn nhưng có thể lệch vài giây.", cutBadRange: "Kết thúc phải sau bắt đầu", st_trimming: "Đang cắt",
+        cutFile: "Cắt tệp này", cutGo: "Cắt", cutHint: "Không cần tải lại. Dùng được cho video dài bao nhiêu cũng được.", cutBadRange: "Kết thúc phải sau bắt đầu", st_trimming: "Đang cắt",
         bigFileHint: "Tệp lớn: nhấn Lưu, rồi chia sẻ từ thư viện hoặc ứng dụng Tệp.",
         language: 'Ngôn ngữ', title: 'Tải & cắt video', placeholder: 'Dán liên kết video',
         step1: 'Liên kết video', step2: 'Tải gì?', paste: 'Dán',
@@ -324,7 +324,7 @@ const I18N = {
         time: { few: 'vài giây', half: 'nửa phút', min: n => n + ' phút', hour: n => n + ' giờ', and: ' ' }
     },
     th: {
-        cutFile: "ตัดไฟล์นี้", cutGo: "ตัด", cutHint: "ไม่ต้องดาวน์โหลดใหม่ คลิปไม่เกิน 3 นาทีตัดแม่นยำถึงวินาที คลิปยาวกว่านั้นเร็วกว่าแต่อาจคลาดเคลื่อนไม่กี่วินาที", cutBadRange: "จุดจบต้องอยู่หลังจุดเริ่ม", st_trimming: "กำลังตัด",
+        cutFile: "ตัดไฟล์นี้", cutGo: "ตัด", cutHint: "ไม่ต้องดาวน์โหลดใหม่ ใช้ได้กับวิดีโอทุกความยาว", cutBadRange: "จุดจบต้องอยู่หลังจุดเริ่ม", st_trimming: "กำลังตัด",
         bigFileHint: "ไฟล์ใหญ่: แตะบันทึก แล้วแชร์จากแกลเลอรีหรือแอปไฟล์",
         language: 'ภาษา', title: 'ดาวน์โหลดและตัดวิดีโอ', placeholder: 'วางลิงก์วิดีโอ',
         step1: 'ลิงก์วิดีโอ', step2: 'ดาวน์โหลดอะไร?', paste: 'วาง',
@@ -342,7 +342,7 @@ const I18N = {
         time: { few: 'ไม่กี่วินาที', half: 'ครึ่งนาที', min: n => n + ' นาที', hour: n => n + ' ชั่วโมง', and: ' ' }
     },
     zh: {
-        cutFile: "剪辑此文件", cutGo: "剪辑", cutHint: "无需重新下载。3 分钟以内精确到秒；更长的片段更快，但可能有几秒误差。", cutBadRange: "结束时间必须晚于开始时间", st_trimming: "正在剪辑",
+        cutFile: "剪辑此文件", cutGo: "剪辑", cutHint: "无需重新下载，任何长度的视频都可以。", cutBadRange: "结束时间必须晚于开始时间", st_trimming: "正在剪辑",
         bigFileHint: "文件较大：请点“保存”，再从相册或文件应用中分享。",
         language: '语言', title: '视频下载与剪辑', placeholder: '粘贴视频链接',
         step1: '视频链接', step2: '下载什么？', paste: '粘贴',
@@ -360,7 +360,7 @@ const I18N = {
         time: { few: '几秒', half: '半分钟', min: n => n + ' 分钟', hour: n => n + ' 小时', and: ' ' }
     },
     ja: {
-        cutFile: "このファイルをカット", cutGo: "カット", cutHint: "再ダウンロード不要。3分以内は秒単位で正確、それより長いと高速ですが数秒ずれることがあります。", cutBadRange: "終了は開始より後にしてください", st_trimming: "カット中",
+        cutFile: "このファイルをカット", cutGo: "カット", cutHint: "再ダウンロード不要。どんな長さの動画でも使えます。", cutBadRange: "終了は開始より後にしてください", st_trimming: "カット中",
         bigFileHint: "大きなファイル：保存してから、ギャラリーやファイルアプリで共有してください。",
         language: '言語', title: '動画ダウンロード＆カット', placeholder: '動画のリンクを貼り付け',
         step1: '動画のリンク', step2: '何をダウンロード？', paste: '貼り付け',
@@ -378,7 +378,7 @@ const I18N = {
         time: { few: '数秒', half: '30秒', min: n => n + '分', hour: n => n + '時間', and: '' }
     },
     ko: {
-        cutFile: "이 파일 자르기", cutGo: "자르기", cutHint: "다시 다운로드하지 않아요. 3분 이하는 초 단위로 정확, 더 길면 빠르지만 몇 초 차이가 날 수 있어요.", cutBadRange: "끝은 시작 이후여야 해요", st_trimming: "자르는 중",
+        cutFile: "이 파일 자르기", cutGo: "자르기", cutHint: "다시 다운로드할 필요 없어요. 길이에 상관없이 사용할 수 있어요.", cutBadRange: "끝은 시작 이후여야 해요", st_trimming: "자르는 중",
         bigFileHint: "큰 파일: 저장을 누른 뒤 갤러리나 파일 앱에서 공유하세요.",
         language: '언어', title: '동영상 다운로드 및 자르기', placeholder: '동영상 링크 붙여넣기',
         step1: '동영상 링크', step2: '무엇을 다운로드할까요?', paste: '붙여넣기',

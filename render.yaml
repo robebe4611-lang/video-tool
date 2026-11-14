@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: video-tool
+    runtime: docker
+    plan: free
+    autoDeploy: true
+    healthCheckPath: /healthz
+    envVars:
+      - key: APP_PASSWORD
+        sync: false

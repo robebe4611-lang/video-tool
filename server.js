@@ -8,6 +8,23 @@ const { Readable } = require('stream');
 
 const app = express();
 app.use(cors());
+
+// Optional password: set APP_PASSWORD on the server to require a login (any username)
+const APP_PASSWORD = process.env.APP_PASSWORD || '';
+const PUBLIC_PATHS = new Set(['/healthz', '/manifest.json', '/icon-192.png', '/icon-512.png']);
+app.get('/healthz', (req, res) => res.send('ok'));
+if (APP_PASSWORD) {
+    app.use((req, res, next) => {
+        if (PUBLIC_PATHS.has(req.path)) return next();
+        const [type, value] = (req.headers.authorization || '').split(' ');
+        if (type === 'Basic' && value) {
+            const pass = Buffer.from(value, 'base64').toString().split(':').slice(1).join(':');
+            if (pass.length === APP_PASSWORD.length && crypto.timingSafeEqual(Buffer.from(pass), Buffer.from(APP_PASSWORD))) return next();
+        }
+        res.setHeader('WWW-Authenticate', 'Basic realm="video-tool", charset="UTF-8"');
+        res.status(401).send('Login required');
+    });
+}
 app.use(express.static(path.join(__dirname, 'public')));
 
 const ALLOWED_QUALITIES = ['360', '480', '720', '1080', '1440', '2160', 'mp3'];
@@ -393,8 +410,10 @@ app.get('/api/job/:id/cancel', (req, res) => {
 setInterval(() => {
     const now = Date.now();
     for (const [id, job] of jobs) {
-        if (now - job.created > JOB_TTL) {
-            if (job.proc) job.proc.kill('SIGKILL');
+        // never touch a running job; delete finished files 1 hour after they finished
+        if (job.status === 'running') continue;
+        if (!job.finishedAt) job.finishedAt = now;
+        if (now - job.finishedAt > JOB_TTL) {
             fs.rm(job.dir, { recursive: true, force: true }, () => {});
             jobs.delete(id);
         }
