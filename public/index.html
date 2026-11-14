@@ -153,6 +153,29 @@
             <span id="shareLabel" data-t="share"></span>
         </button>
         <p id="doneHint" class="hidden text-xs text-zinc-500 text-center leading-relaxed" data-t="bigFileHint"></p>
+        <button onclick="toggleCutPanel()" id="cutBtn" class="press flex items-center justify-center gap-2 w-full border border-zinc-800 hover:bg-zinc-800 py-3 rounded-xl text-sm text-zinc-300">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M20 4 8.12 15.88M14.47 14.48 20 20M8.12 8.12 12 12"/></svg>
+            <span data-t="cutFile"></span>
+        </button>
+        <div id="cutPanel" class="hidden space-y-3 pt-1">
+            <video id="cutPlayer" controls playsinline preload="metadata" class="w-full rounded-xl bg-zinc-950 max-h-56"></video>
+            <div class="grid grid-cols-2 gap-3">
+                <div>
+                    <label class="text-xs text-zinc-500 block mb-1.5" data-t="start"></label>
+                    <input id="cutStart" type="text" inputmode="numeric" value="00:00:00" dir="ltr"
+                        class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-2 py-2.5 text-center font-mono text-sm focus:outline-none focus:border-emerald-400/60">
+                    <button type="button" onclick="cutFromPlayer('cutStart')" class="press w-full mt-1.5 text-xs text-zinc-400 bg-zinc-800 rounded-lg py-1.5" data-t="fromPlayer"></button>
+                </div>
+                <div>
+                    <label class="text-xs text-zinc-500 block mb-1.5" data-t="end"></label>
+                    <input id="cutEnd" type="text" inputmode="numeric" value="00:00:00" dir="ltr"
+                        class="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-2 py-2.5 text-center font-mono text-sm focus:outline-none focus:border-emerald-400/60">
+                    <button type="button" onclick="cutFromPlayer('cutEnd')" class="press w-full mt-1.5 text-xs text-zinc-400 bg-zinc-800 rounded-lg py-1.5" data-t="fromPlayer"></button>
+                </div>
+            </div>
+            <p class="text-xs text-zinc-500" data-t="cutHint"></p>
+            <button onclick="startCut()" id="cutGo" class="press w-full bg-zinc-100 text-zinc-900 py-3 rounded-xl font-semibold text-sm" data-t="cutGo"></button>
+        </div>
     </section>
 
     <p id="statusMsg" class="hidden mt-4 text-sm text-center"></p>
@@ -176,7 +199,7 @@
 
 const STAGE_KEYS = {
     'מתחבר לאתר...': 'st_connecting', 'מוריד וידאו': 'st_video', 'מוריד שמע': 'st_audio',
-    'מעבד ומאחד קובץ...': 'st_processing', 'מוריד ומעבד...': 'st_working', 'מוכן!': 'st_done'
+    'מעבד ומאחד קובץ...': 'st_processing', 'מוריד ומעבד...': 'st_working', 'מוכן!': 'st_done', 'חותך...': 'st_trimming'
 };
 
 const OPTION_DEFS = [
@@ -416,7 +439,46 @@ $('videoUrl').addEventListener('paste', () => setTimeout(loadPreview, 50));
 ['startTime', 'endTime'].forEach(id => $(id).addEventListener('input', () => { renderOptions(); }));
 
 /* ---------- download job ---------- */
+/* ---------- trim after download ---------- */
+function toggleCutPanel() {
+    const panel = $('cutPanel');
+    const opening = panel.classList.contains('hidden');
+    panel.classList.toggle('hidden');
+    if (opening && doneJobId) {
+        const player = $('cutPlayer');
+        player.src = '/api/job/' + doneJobId + '/view';
+        player.onloadedmetadata = () => {
+            $('cutStart').value = '00:00:00';
+            $('cutEnd').value = formatTime(player.duration || 0);
+        };
+    }
+}
+function cutFromPlayer(id) { $(id).value = formatTime($('cutPlayer').currentTime); }
+
+async function startCut() {
+    if (!doneJobId) return;
+    const s = toSec($('cutStart').value), e = toSec($('cutEnd').value);
+    if (isNaN(s) || isNaN(e) || e <= s) return showStatus(t('cutBadRange'), true);
+    const params = new URLSearchParams({ start: $('cutStart').value, end: $('cutEnd').value });
+    jobKind = 'cut';
+    $('cutPlayer').pause();
+    $('doneBox').classList.add('hidden');
+    $('progressBox').classList.remove('hidden');
+    $('cancelBtn').classList.remove('hidden');
+    $('downloadBtn').disabled = true;
+    updateProgress({ stage: 'חותך...', percent: 0 });
+    showStatus('');
+    try {
+        const res = await fetch('/api/job/' + doneJobId + '/trim?' + params);
+        const data = await res.json();
+        if (data.error) throw new Error(data.error);
+        currentJob = data.id;
+        poll();
+    } catch (err) { fail(err.message); }
+}
+
 async function startDownload() {
+    jobKind = 'download';
     const url = $('videoUrl').value.trim();
     if (!url) { $('urlError').textContent = t('needUrl'); $('urlError').classList.remove('hidden'); $('videoUrl').focus(); return; }
 
@@ -481,8 +543,14 @@ async function poll() {
     } catch { pollTimer = setTimeout(poll, 2000); }
 }
 
+let jobKind = 'download';   // 'download' | 'cut'
+let doneJobId = null;
+
 function finish(j) {
-    if (j.bytes && j.elapsed > 2) saveSpeed(j.bytes / Math.max(1, j.elapsed - 1));
+    if (jobKind === 'download' && j.bytes && j.elapsed > 2) saveSpeed(j.bytes / Math.max(1, j.elapsed - 1));
+    doneJobId = j.id;
+    $('cutPanel').classList.add('hidden');
+    $('cutPlayer').removeAttribute('src');
     updateProgress({ ...j, percent: 100 });
     $('progressBox').classList.add('hidden');
     $('downloadBtn').disabled = false;

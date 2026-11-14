@@ -306,6 +306,82 @@ app.get('/api/job/:id/file', (req, res) => {
     res.download(job.file, job.fileName);   // sends Content-Length => real progress in the phone's downloads
 });
 
+// Stream the finished file inline (with seeking) so the page can preview it for trimming
+app.get('/api/job/:id/view', (req, res) => {
+    const job = jobs.get(req.params.id);
+    if (!job || job.status !== 'done' || !job.file) return res.status(404).send('הקובץ לא נמצא');
+    res.sendFile(job.file);
+});
+
+// Trim an already-downloaded file - no re-download, runs on the local copy
+app.get('/api/job/:id/trim', (req, res) => {
+    const src = jobs.get(req.params.id);
+    if (!src || src.status !== 'done' || !src.file) return res.status(404).json({ error: 'הקובץ לא נמצא' });
+    const { start = '', end = '' } = req.query;
+    if ((start && !TIME_RE.test(start)) || (end && !TIME_RE.test(end))) return res.status(400).json({ error: 'זמן לא תקין' });
+
+    const toSec = s => s ? s.split(':').map(Number).reduce((a, v) => a * 60 + v, 0) : 0;
+    const s = toSec(start), e = toSec(end);
+    if (e && e <= s) return res.status(400).json({ error: 'זמן הסיום חייב להיות אחרי ההתחלה' });
+
+    const id = crypto.randomBytes(8).toString('hex');
+    const dir = path.join(JOBS_DIR, id);
+    fs.mkdirSync(dir);
+    const ext = path.extname(src.file);
+    const out = path.join(dir, 'file' + ext);
+
+    const args = ['-hide_banner', '-loglevel', 'error', '-nostats', '-progress', 'pipe:1'];
+    if (s) args.push('-ss', String(s));
+    if (e) args.push('-to', String(e));
+    args.push('-i', src.file);
+    const isVideo = ext.toLowerCase() !== '.mp3';
+    const length = (e || 0) - s;
+    if (isVideo && length > 0 && length <= 180) {
+        // short clip: re-encode so the cut is exact to the second
+        args.push('-c:v', 'libx264', '-preset', 'veryfast', '-crf', '20', '-c:a', 'aac', '-b:a', '160k');
+    } else {
+        // long clip / audio: copy streams = very fast; video cuts land on the nearest keyframe
+        args.push('-map', '0', '-c', 'copy', '-avoid_negative_ts', 'make_zero');
+    }
+    if (ext.toLowerCase() === '.mp4') args.push('-movflags', '+faststart');
+    args.push('-y', out);
+
+    const total = (e || src.duration || 0) - s;
+    const job = {
+        id, dir, status: 'running', stage: 'חותך...', percent: total > 0 ? 0 : null, speed: '', eta: '',
+        error: null, file: null, fileName: null, title: src.title, created: Date.now(), parts: 0, proc: null,
+        est: 0, samples: []
+    };
+    jobs.set(id, job);
+
+    const p = spawn('ffmpeg', args, { stdio: ['ignore', 'pipe', 'pipe'] });
+    job.proc = p;
+    let errText = '';
+    p.stdout.on('data', d => {
+        const m = /out_time_us=(\d+)/.exec(d.toString());
+        if (m && total > 0) job.percent = Math.min(99, (Number(m[1]) / 1e6 / total) * 100);
+    });
+    p.stderr.on('data', d => { errText += d; });
+    p.on('error', err => { job.status = 'error'; job.error = 'ffmpeg not available: ' + err.message; });
+    p.on('close', code => {
+        job.proc = null;
+        if (job.status === 'cancelled') return;
+        if (code !== 0 || !fs.existsSync(out)) {
+            job.status = 'error';
+            job.error = shortError(errText) || 'החיתוך נכשל';
+            return;
+        }
+        job.file = out;
+        job.status = 'done';
+        job.percent = 100;
+        job.stage = 'מוכן!';
+        const tag = `${start || '00:00:00'}-${end || 'end'}`.replace(/:/g, '.');
+        job.fileName = safeName(src.title) + ' (' + tag + ')' + ext;
+    });
+
+    res.json({ id });
+});
+
 app.get('/api/job/:id/cancel', (req, res) => {
     const job = jobs.get(req.params.id);
     if (!job) return res.status(404).json({ error: 'לא נמצא' });
