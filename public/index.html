@@ -144,7 +144,11 @@
                 <p id="doneName" class="text-xs text-zinc-500 truncate" dir="auto"></p>
             </div>
         </div>
-        <a id="saveLink" href="#" class="press flex items-center justify-center gap-2 w-full bg-emerald-400 text-zinc-950 py-3.5 rounded-xl font-semibold">
+        <button onclick="saveToLibrary()" id="libSaveBtn" class="press flex items-center justify-center gap-2 w-full bg-emerald-400 text-zinc-950 py-3.5 rounded-xl font-semibold disabled:opacity-60">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h6l2 2h8v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z"/><path d="M12 10v6"/><path d="m9 13 3 3 3-3"/></svg>
+            <span id="libSaveLabel" data-t="saveInTool"></span>
+        </button>
+        <a id="saveLink" href="#" class="press flex items-center justify-center gap-2 w-full bg-zinc-800 hover:bg-zinc-700 py-3 rounded-xl text-sm">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg>
             <span data-t="save"></span>
         </a>
@@ -179,7 +183,32 @@
     </section>
 
     <p id="statusMsg" class="hidden mt-4 text-sm text-center"></p>
+
+    <!-- Library: files kept inside the tool (stored on this phone) -->
+    <section class="mt-8">
+        <div class="flex items-center justify-between mb-3">
+            <h2 class="flex items-center gap-2 text-sm font-semibold">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="m10 9 5 3-5 3z"/></svg>
+                <span data-t="library"></span>
+            </h2>
+            <span id="libUsage" class="text-xs text-zinc-500 font-mono" dir="ltr"></span>
+        </div>
+        <div id="libList" class="space-y-2"></div>
+    </section>
 </main>
+
+<!-- In-app player -->
+<div id="playerModal" class="hidden fixed inset-0 z-50 bg-zinc-950 flex flex-col" role="dialog" aria-modal="true">
+    <div class="flex items-center justify-between gap-3 p-4">
+        <p id="playerTitle" class="text-sm text-zinc-300 truncate" dir="auto"></p>
+        <button onclick="closePlayer()" class="press shrink-0 w-10 h-10 rounded-full bg-zinc-800 grid place-items-center" aria-label="close">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+        </button>
+    </div>
+    <div class="flex-1 grid place-items-center px-2 pb-6">
+        <video id="libPlayer" controls playsinline class="w-full max-h-[80dvh] rounded-xl bg-black"></video>
+    </div>
+</div>
 
 <!-- Language sheet -->
 <div id="langSheet" class="hidden fixed inset-0 z-40" role="dialog" aria-modal="true">
@@ -235,6 +264,7 @@ function setLang(l) {
     document.title = t('title');
     $('langName').textContent = (LANGS.find(x => x.code === l) || {}).name || l;
     renderLangList();
+    if (typeof renderLibrary === 'function') renderLibrary();
     renderOptions();
     renderVideoCard();
     if (lastProgress) updateProgress(lastProgress);
@@ -549,6 +579,9 @@ let doneJobId = null;
 function finish(j) {
     if (jobKind === 'download' && j.bytes && j.elapsed > 2) saveSpeed(j.bytes / Math.max(1, j.elapsed - 1));
     doneJobId = j.id;
+    doneMeta = { jobId: j.id, fileName: j.fileName, bytes: j.bytes || 0 };
+    $('libSaveBtn').disabled = false;
+    $('libSaveLabel').textContent = t('saveInTool');
     $('cutPanel').classList.add('hidden');
     $('cutPlayer').removeAttribute('src');
     updateProgress({ ...j, percent: 100 });
@@ -605,7 +638,140 @@ async function shareFile() {
     }
 }
 
+
+/* ---------- library: keep files inside the tool (Origin Private File System on this device) ---------- */
+const LIB_KEY = 'library';
+let doneMeta = null;          // { jobId, fileName, bytes }
+let playerUrl = null;
+
+function libLoad() { try { return JSON.parse(localStorage.getItem(LIB_KEY)) || []; } catch { return []; } }
+function libStore(list) { try { localStorage.setItem(LIB_KEY, JSON.stringify(list)); } catch {} }
+const hasOPFS = () => !!(navigator.storage && navigator.storage.getDirectory);
+
+async function libDir() {
+    const root = await navigator.storage.getDirectory();
+    return root.getDirectoryHandle('library', { create: true });
+}
+
+async function saveToLibrary() {
+    if (!doneMeta) return;
+    if (!hasOPFS()) return showStatus(t('noLibrary'), true);
+    const btn = $('libSaveBtn'), label = $('libSaveLabel');
+    btn.disabled = true;
+    const id = Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+    const ext = (doneMeta.fileName.match(/\.[a-z0-9]+$/i) || ['.mp4'])[0];
+    try {
+        if (navigator.storage.persist) navigator.storage.persist().catch(() => {});
+        const dir = await libDir();
+        const fh = await dir.getFileHandle(id + ext, { create: true });
+        const writable = await fh.createWritable();
+        const res = await fetch('/api/job/' + doneMeta.jobId + '/file');
+        if (!res.ok || !res.body) throw new Error(t('fileGone'));
+        const total = +res.headers.get('content-length') || doneMeta.bytes || 0;
+        const reader = res.body.getReader();
+        let got = 0;
+        for (;;) {
+            const { done, value } = await reader.read();
+            if (done) break;
+            await writable.write(value);
+            got += value.length;
+            if (total) label.textContent = t('savingInTool', { p: Math.floor(got / total * 100) });
+        }
+        await writable.close();
+        const list = libLoad();
+        list.unshift({ id, file: id + ext, name: doneMeta.fileName, bytes: got, date: Date.now() });
+        libStore(list);
+        label.textContent = t('savedInTool');
+        renderLibrary();
+        if (navigator.vibrate) navigator.vibrate(30);
+    } catch (e) {
+        try { (await libDir()).removeEntry(id + ext); } catch {}
+        label.textContent = t('saveInTool');
+        btn.disabled = false;
+        showStatus(t('failed') + (e.name === 'QuotaExceededError' ? t('noSpace') : e.message), true);
+    }
+}
+
+async function libFile(item) {
+    const dir = await libDir();
+    return (await dir.getFileHandle(item.file)).getFile();
+}
+
+async function playItem(id) {
+    const item = libLoad().find(x => x.id === id);
+    if (!item) return;
+    try {
+        const file = await libFile(item);
+        if (playerUrl) URL.revokeObjectURL(playerUrl);
+        playerUrl = URL.createObjectURL(file);
+        $('playerTitle').textContent = item.name;
+        $('libPlayer').src = playerUrl;
+        $('playerModal').classList.remove('hidden');
+        $('libPlayer').play().catch(() => {});
+    } catch { showStatus(t('fileGone'), true); }
+}
+
+function closePlayer() {
+    const p = $('libPlayer');
+    p.pause(); p.removeAttribute('src'); p.load();
+    if (playerUrl) { URL.revokeObjectURL(playerUrl); playerUrl = null; }
+    $('playerModal').classList.add('hidden');
+}
+
+async function exportItem(id) {
+    const item = libLoad().find(x => x.id === id);
+    if (!item) return;
+    try {
+        const file = await libFile(item);
+        const url = URL.createObjectURL(file);
+        const a = document.createElement('a');
+        a.href = url; a.download = item.name;
+        document.body.appendChild(a); a.click(); a.remove();
+        setTimeout(() => URL.revokeObjectURL(url), 60000);
+    } catch { showStatus(t('fileGone'), true); }
+}
+
+async function deleteItem(id) {
+    const item = libLoad().find(x => x.id === id);
+    if (!item || !confirm(t('deleteConfirm'))) return;
+    try { (await libDir()).removeEntry(item.file); } catch {}
+    libStore(libLoad().filter(x => x.id !== id));
+    renderLibrary();
+}
+
+async function renderLibrary() {
+    const list = libLoad();
+    const box = $('libList');
+    if (!list.length) {
+        box.innerHTML = `<div class="border border-dashed border-zinc-800 rounded-2xl p-5 text-center text-sm text-zinc-500">${esc(t('libraryEmpty'))}</div>`;
+    } else {
+        const fmtDate = ms => { try { return new Date(ms).toLocaleDateString(lang); } catch { return ''; } };
+        box.innerHTML = list.map(x => `
+            <div class="flex items-center gap-3 bg-zinc-900 border border-zinc-800 rounded-2xl p-3">
+                <button onclick="playItem('${x.id}')" class="press shrink-0 w-12 h-12 rounded-xl bg-emerald-400/10 text-emerald-400 grid place-items-center" aria-label="${esc(t('play'))}">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+                </button>
+                <div class="min-w-0 flex-1">
+                    <p class="text-sm truncate" dir="auto">${esc(x.name)}</p>
+                    <p class="text-xs text-zinc-500 mt-0.5">${ltr(formatBytes(x.bytes))} · ${fmtDate(x.date)}</p>
+                </div>
+                <button onclick="exportItem('${x.id}')" class="press shrink-0 w-10 h-10 rounded-xl bg-zinc-800 grid place-items-center" aria-label="${esc(t('save'))}" title="${esc(t('save'))}">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg>
+                </button>
+                <button onclick="deleteItem('${x.id}')" class="press shrink-0 w-10 h-10 rounded-xl bg-zinc-800 text-zinc-400 grid place-items-center" aria-label="${esc(t('delete'))}" title="${esc(t('delete'))}">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="M19 6l-1 14H6L5 6"/></svg>
+                </button>
+            </div>`).join('');
+    }
+    try {
+        const est = await navigator.storage.estimate();
+        const used = list.reduce((a, x) => a + (x.bytes || 0), 0);
+        $('libUsage').textContent = used ? formatBytes(used) + (est.quota ? ' / ' + formatBytes(est.quota) : '') : '';
+    } catch { $('libUsage').textContent = ''; }
+}
+
 setLang(detectLang());
+renderLibrary();
 if ('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js').catch(() => {});
 </script>
 </body>

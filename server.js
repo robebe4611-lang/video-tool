@@ -345,15 +345,9 @@ app.get('/api/job/:id/trim', (req, res) => {
     if (s) args.push('-ss', String(s));
     if (e) args.push('-to', String(e));
     args.push('-i', src.file);
-    const isVideo = ext.toLowerCase() !== '.mp3';
-    const length = (e || 0) - s;
-    if (isVideo && length > 0 && length <= 180) {
-        // short clip: re-encode so the cut is exact to the second
-        args.push('-c:v', 'libx264', '-preset', 'veryfast', '-crf', '20', '-c:a', 'aac', '-b:a', '160k');
-    } else {
-        // long clip / audio: copy streams = very fast; video cuts land on the nearest keyframe
-        args.push('-map', '0', '-c', 'copy', '-avoid_negative_ts', 'make_zero');
-    }
+    // Stream copy: fast and light on memory (re-encoding crashed the small cloud server).
+    // Video cuts land on the nearest keyframe, usually within a few seconds.
+    args.push('-map', '0', '-c', 'copy', '-avoid_negative_ts', 'make_zero');
     if (ext.toLowerCase() === '.mp4') args.push('-movflags', '+faststart');
     args.push('-y', out);
 
