@@ -821,6 +821,7 @@ async function playItem(id) {
         $('playerTitle').textContent = item.name;
         $('libPlayer').src = playerUrl;
         $('playerModal').classList.remove('hidden');
+        $('libPlayer').onerror = () => { closePlayer(); showStatus(t('brokenFile'), true); };
         $('libPlayer').play().catch(() => {});
     } catch { showStatus(t('fileGone'), true); }
 }

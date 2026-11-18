@@ -209,6 +209,10 @@ function inputArgs(stream, seek) {
 }
 
 app.get('/api/live', async (req, res) => {
+    // Refuse "continue from byte N": a live stream always starts from the beginning,
+    // so resuming would corrupt the file. Failing is better than a broken video.
+    const range = req.headers.range || '';
+    if (range && !/^bytes=0-\s*$/.test(range)) return res.status(416).send('Live stream cannot be resumed');
     const { url, start = '', end = '', quality = '720' } = req.query;
     if (!url || !isValidUrl(url)) return res.status(400).send('Invalid URL');
     if (!ALLOWED_QUALITIES.includes(quality)) return res.status(400).send('Invalid quality');
@@ -257,8 +261,11 @@ app.get('/api/live', async (req, res) => {
         if (aborted) return;
         res.attachment(fileName);
         res.setHeader('Content-Type', isAudio ? 'audio/mpeg' : 'video/mp4');
-        res.setHeader('Cache-Control', 'no-store');
+        res.setHeader('Cache-Control', 'no-store, no-transform');
         res.setHeader('X-Accel-Buffering', 'no');
+        // A live stream can't be resumed from the middle: tell the phone not to try
+        // (a "resume" would restart the stream and glue two copies together = broken file)
+        res.setHeader('Accept-Ranges', 'none');
         res.write(first);
         ff.stdout.pipe(res);
     });
