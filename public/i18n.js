@@ -35,6 +35,7 @@ const RTL = ['he', 'ar', 'fa', 'ur'];
 
 const I18N = {
     en: {
+        openSource: "Open original",
         watchNow: "Watch now", shareShort: "Share", inLibraryNote: "Saved in your library below", directStarted: "Downloading in your browser's downloads",
         saveInTool: "Keep in the tool", savingInTool: "Saving in the tool… {p}%", savedInTool: "Saved in your library", library: "My library", libraryEmpty: "Nothing here yet. Download a video and tap “Keep in the tool” to watch it here anytime.", play: "Play", delete: "Delete", deleteConfirm: "Delete this video from the library?", noLibrary: "This browser can't keep files in the tool. Use “Save to phone”.", fileGone: "The file is no longer on the server. Download it again.", noSpace: "Not enough space on this phone",
         cutFile: "Trim this file", cutGo: "Cut", cutHint: "No re-download needed. Works on videos of any length.", cutBadRange: "End must be after start", st_trimming: "Trimming",
@@ -56,6 +57,7 @@ const I18N = {
         time: { few: 'a few seconds', half: 'half a minute', min: n => n === 1 ? '1 minute' : n + ' minutes', hour: n => n === 1 ? '1 hour' : n + ' hours', and: ' ' }
     },
     he: {
+        openSource: "פתח את המקור",
         watchNow: "צפה עכשיו", shareShort: "שתף", inLibraryNote: "נשמר בספרייה שלך למטה", directStarted: "ההורדה מתבצעת בהורדות של הדפדפן",
         saveInTool: "שמור בכלי", savingInTool: "שומר בכלי… {p}%", savedInTool: "נשמר בספרייה שלך", library: "הספרייה שלי", libraryEmpty: "עדיין אין כאן כלום. הורד סרטון ולחץ \"שמור בכלי\" כדי לצפות בו כאן מתי שתרצה.", play: "נגן", delete: "מחק", deleteConfirm: "למחוק את הסרטון מהספרייה?", noLibrary: "הדפדפן הזה לא יכול לשמור קבצים בכלי. השתמש ב\"שמור בטלפון\".", fileGone: "הקובץ כבר לא בשרת. הורד אותו שוב.", noSpace: "אין מספיק מקום בטלפון",
         cutFile: "חתוך את הקובץ", cutGo: "חתוך", cutHint: "בלי להוריד שוב. עובד על סרטונים בכל אורך.", cutBadRange: "הסיום חייב להיות אחרי ההתחלה", st_trimming: "חותך",
@@ -76,6 +78,7 @@ const I18N = {
         time: { few: 'כמה שניות', half: 'חצי דקה', min: n => n === 1 ? 'דקה' : n === 2 ? 'שתי דקות' : n + ' דקות', hour: n => n === 1 ? 'שעה' : n === 2 ? 'שעתיים' : n + ' שעות', and: ' ו-' }
     },
     ar: {
+        openSource: "افتح المصدر",
         watchNow: "شاهد الآن", shareShort: "مشاركة", inLibraryNote: "تم الحفظ في مكتبتك بالأسفل", directStarted: "يتم التنزيل في تنزيلات المتصفح",
         saveInTool: "احفظ في الأداة", savingInTool: "جارٍ الحفظ في الأداة… {p}%", savedInTool: "تم الحفظ في مكتبتك", library: "مكتبتي", libraryEmpty: "لا شيء هنا بعد. نزّل فيديو واضغط \"احفظ في الأداة\" لتشاهده هنا متى شئت.", play: "تشغيل", delete: "حذف", deleteConfirm: "حذف هذا الفيديو من المكتبة؟", noLibrary: "هذا المتصفح لا يستطيع حفظ الملفات في الأداة. استخدم \"حفظ على الهاتف\".", fileGone: "الملف لم يعد على الخادم. نزّله من جديد.", noSpace: "لا توجد مساحة كافية على الهاتف",
         cutFile: "قص هذا الملف", cutGo: "قص", cutHint: "بدون تنزيل من جديد. يعمل مع الفيديوهات بأي طول.", cutBadRange: "يجب أن تكون النهاية بعد البداية", st_trimming: "جارٍ القص",
@@ -96,6 +99,7 @@ const I18N = {
         time: { few: 'بضع ثوانٍ', half: 'نصف دقيقة', min: n => n === 1 ? 'دقيقة' : n === 2 ? 'دقيقتان' : n <= 10 ? n + ' دقائق' : n + ' دقيقة', hour: n => n === 1 ? 'ساعة' : n === 2 ? 'ساعتان' : n <= 10 ? n + ' ساعات' : n + ' ساعة', and: ' و' }
     },
     es: {
+        openSource: "Abrir original",
         watchNow: "Ver ahora", shareShort: "Compartir", inLibraryNote: "Guardado en tu biblioteca, abajo", directStarted: "Descargando en las descargas del navegador",
         saveInTool: "Guardar en la app", savingInTool: "Guardando en la app… {p}%", savedInTool: "Guardado en tu biblioteca", library: "Mi biblioteca", libraryEmpty: "Aún no hay nada. Descarga un vídeo y pulsa “Guardar en la app” para verlo aquí cuando quieras.", play: "Reproducir", delete: "Eliminar", deleteConfirm: "¿Eliminar este vídeo de la biblioteca?", noLibrary: "Este navegador no puede guardar archivos en la app. Usa “Guardar en el teléfono”.", fileGone: "El archivo ya no está en el servidor. Descárgalo de nuevo.", noSpace: "No hay espacio suficiente en el teléfono",
         cutFile: "Recortar este archivo", cutGo: "Recortar", cutHint: "Sin volver a descargar. Funciona con vídeos de cualquier duración.", cutBadRange: "El fin debe ser después del inicio", st_trimming: "Recortando",
@@ -116,6 +120,7 @@ const I18N = {
         time: { few: 'unos segundos', half: 'medio minuto', min: n => n === 1 ? '1 minuto' : n + ' minutos', hour: n => n === 1 ? '1 hora' : n + ' horas', and: ' y ' }
     },
     pt: {
+        openSource: "Abrir original",
         watchNow: "Assistir agora", shareShort: "Compartilhar", inLibraryNote: "Salvo na sua biblioteca, abaixo", directStarted: "Baixando nos downloads do navegador",
         saveInTool: "Guardar no app", savingInTool: "Guardando no app… {p}%", savedInTool: "Salvo na sua biblioteca", library: "Minha biblioteca", libraryEmpty: "Nada aqui ainda. Baixe um vídeo e toque em “Guardar no app” para assistir aqui quando quiser.", play: "Reproduzir", delete: "Excluir", deleteConfirm: "Excluir este vídeo da biblioteca?", noLibrary: "Este navegador não consegue guardar arquivos no app. Use “Salvar no celular”.", fileGone: "O arquivo não está mais no servidor. Baixe de novo.", noSpace: "Sem espaço suficiente no celular",
         cutFile: "Cortar este arquivo", cutGo: "Cortar", cutHint: "Sem baixar de novo. Funciona com vídeos de qualquer duração.", cutBadRange: "O fim deve ser depois do início", st_trimming: "Cortando",
@@ -136,6 +141,7 @@ const I18N = {
         time: { few: 'alguns segundos', half: 'meio minuto', min: n => n === 1 ? '1 minuto' : n + ' minutos', hour: n => n === 1 ? '1 hora' : n + ' horas', and: ' e ' }
     },
     fr: {
+        openSource: "Ouvrir l'original",
         watchNow: "Regarder", shareShort: "Partager", inLibraryNote: "Enregistré dans votre bibliothèque ci-dessous", directStarted: "Téléchargement dans les téléchargements du navigateur",
         saveInTool: "Garder dans l'outil", savingInTool: "Enregistrement… {p} %", savedInTool: "Enregistré dans votre bibliothèque", library: "Ma bibliothèque", libraryEmpty: "Rien pour l'instant. Téléchargez une vidéo et appuyez sur « Garder dans l'outil » pour la regarder ici quand vous voulez.", play: "Lire", delete: "Supprimer", deleteConfirm: "Supprimer cette vidéo de la bibliothèque ?", noLibrary: "Ce navigateur ne peut pas garder de fichiers dans l'outil. Utilisez « Enregistrer sur le téléphone ».", fileGone: "Le fichier n'est plus sur le serveur. Téléchargez-le à nouveau.", noSpace: "Pas assez d'espace sur le téléphone",
         cutFile: "Couper ce fichier", cutGo: "Couper", cutHint: "Sans retélécharger. Fonctionne avec des vidéos de toute durée.", cutBadRange: "La fin doit être après le début", st_trimming: "Découpage",
@@ -156,6 +162,7 @@ const I18N = {
         time: { few: 'quelques secondes', half: 'une demi-minute', min: n => n === 1 ? '1 minute' : n + ' minutes', hour: n => n === 1 ? '1 heure' : n + ' heures', and: ' et ' }
     },
     de: {
+        openSource: "Original öffnen",
         watchNow: "Jetzt ansehen", shareShort: "Teilen", inLibraryNote: "In deiner Bibliothek unten gespeichert", directStarted: "Download läuft in den Browser-Downloads",
         saveInTool: "Im Tool behalten", savingInTool: "Wird im Tool gespeichert… {p} %", savedInTool: "In deiner Bibliothek gespeichert", library: "Meine Bibliothek", libraryEmpty: "Noch nichts hier. Lade ein Video und tippe auf „Im Tool behalten“, um es jederzeit hier anzusehen.", play: "Abspielen", delete: "Löschen", deleteConfirm: "Dieses Video aus der Bibliothek löschen?", noLibrary: "Dieser Browser kann keine Dateien im Tool speichern. Nutze „Aufs Handy speichern“.", fileGone: "Die Datei ist nicht mehr auf dem Server. Lade sie erneut.", noSpace: "Nicht genug Speicher auf dem Handy",
         cutFile: "Diese Datei schneiden", cutGo: "Schneiden", cutHint: "Ohne neuen Download. Funktioniert mit Videos jeder Länge.", cutBadRange: "Ende muss nach dem Start liegen", st_trimming: "Wird geschnitten",
@@ -176,6 +183,7 @@ const I18N = {
         time: { few: 'wenige Sekunden', half: 'eine halbe Minute', min: n => n === 1 ? '1 Minute' : n + ' Minuten', hour: n => n === 1 ? '1 Stunde' : n + ' Stunden', and: ' und ' }
     },
     it: {
+        openSource: "Apri originale",
         watchNow: "Guarda ora", shareShort: "Condividi", inLibraryNote: "Salvato nella tua libreria qui sotto", directStarted: "Download in corso nei download del browser",
         saveInTool: "Tieni nell'app", savingInTool: "Salvataggio nell'app… {p}%", savedInTool: "Salvato nella tua libreria", library: "La mia libreria", libraryEmpty: "Ancora niente. Scarica un video e tocca “Tieni nell'app” per guardarlo qui quando vuoi.", play: "Riproduci", delete: "Elimina", deleteConfirm: "Eliminare questo video dalla libreria?", noLibrary: "Questo browser non può tenere file nell'app. Usa “Salva sul telefono”.", fileGone: "Il file non è più sul server. Scaricalo di nuovo.", noSpace: "Spazio insufficiente sul telefono",
         cutFile: "Taglia questo file", cutGo: "Taglia", cutHint: "Senza riscaricare. Funziona con video di qualsiasi durata.", cutBadRange: "La fine deve essere dopo l'inizio", st_trimming: "Taglio in corso",
@@ -196,6 +204,7 @@ const I18N = {
         time: { few: 'pochi secondi', half: 'mezzo minuto', min: n => n === 1 ? '1 minuto' : n + ' minuti', hour: n => n === 1 ? '1 ora' : n + ' ore', and: ' e ' }
     },
     ru: {
+        openSource: "Открыть источник",
         watchNow: "Смотреть", shareShort: "Поделиться", inLibraryNote: "Сохранено в библиотеке ниже", directStarted: "Загрузка идёт в загрузках браузера",
         saveInTool: "Сохранить в приложении", savingInTool: "Сохранение… {p}%", savedInTool: "Сохранено в вашей библиотеке", library: "Моя библиотека", libraryEmpty: "Пока пусто. Скачайте видео и нажмите «Сохранить в приложении», чтобы смотреть его здесь.", play: "Смотреть", delete: "Удалить", deleteConfirm: "Удалить это видео из библиотеки?", noLibrary: "Этот браузер не может хранить файлы в приложении. Используйте «Сохранить на телефон».", fileGone: "Файла больше нет на сервере. Скачайте его снова.", noSpace: "Недостаточно места на телефоне",
         cutFile: "Обрезать этот файл", cutGo: "Обрезать", cutHint: "Без повторной загрузки. Работает с видео любой длины.", cutBadRange: "Конец должен быть после начала", st_trimming: "Обрезка",
@@ -216,6 +225,7 @@ const I18N = {
         time: { few: 'несколько секунд', half: 'полминуты', min: n => n + ' ' + plural3(n, 'минута', 'минуты', 'минут'), hour: n => n + ' ' + plural3(n, 'час', 'часа', 'часов'), and: ' ' }
     },
     tr: {
+        openSource: "Kaynağı aç",
         watchNow: "Şimdi izle", shareShort: "Paylaş", inLibraryNote: "Aşağıdaki kitaplığına kaydedildi", directStarted: "Tarayıcı indirmelerinde iniyor",
         saveInTool: "Araçta sakla", savingInTool: "Araçta kaydediliyor… %{p}", savedInTool: "Kitaplığına kaydedildi", library: "Kitaplığım", libraryEmpty: "Henüz bir şey yok. Bir video indir ve burada izlemek için “Araçta sakla”ya dokun.", play: "Oynat", delete: "Sil", deleteConfirm: "Bu video kitaplıktan silinsin mi?", noLibrary: "Bu tarayıcı dosyaları araçta saklayamıyor. “Telefona kaydet”i kullan.", fileGone: "Dosya artık sunucuda değil. Tekrar indir.", noSpace: "Telefonda yeterli alan yok",
         cutFile: "Bu dosyayı kes", cutGo: "Kes", cutHint: "Yeniden indirmeden. Her uzunluktaki videoda çalışır.", cutBadRange: "Bitiş başlangıçtan sonra olmalı", st_trimming: "Kesiliyor",
@@ -236,6 +246,7 @@ const I18N = {
         time: { few: 'birkaç saniye', half: 'yarım dakika', min: n => n + ' dakika', hour: n => n + ' saat', and: ' ' }
     },
     fa: {
+        openSource: "باز کردن منبع",
         watchNow: "تماشا", shareShort: "اشتراک", inLibraryNote: "در کتابخانه پایین ذخیره شد", directStarted: "در دانلودهای مرورگر در حال دانلود است",
         saveInTool: "نگه‌داری در ابزار", savingInTool: "در حال ذخیره در ابزار… {p}٪", savedInTool: "در کتابخانه شما ذخیره شد", library: "کتابخانه من", libraryEmpty: "هنوز چیزی نیست. یک ویدیو دانلود کنید و «نگه‌داری در ابزار» را بزنید تا هر وقت خواستید اینجا ببینید.", play: "پخش", delete: "حذف", deleteConfirm: "این ویدیو از کتابخانه حذف شود؟", noLibrary: "این مرورگر نمی‌تواند فایل‌ها را در ابزار نگه دارد. از «ذخیره در گوشی» استفاده کنید.", fileGone: "فایل دیگر روی سرور نیست. دوباره دانلود کنید.", noSpace: "فضای کافی در گوشی نیست",
         cutFile: "برش این فایل", cutGo: "برش", cutHint: "بدون دانلود دوباره. برای ویدیو با هر طولی کار می‌کند.", cutBadRange: "پایان باید بعد از شروع باشد", st_trimming: "در حال برش",
@@ -256,6 +267,7 @@ const I18N = {
         time: { few: 'چند ثانیه', half: 'نیم دقیقه', min: n => n + ' دقیقه', hour: n => n + ' ساعت', and: ' و ' }
     },
     ur: {
+        openSource: "اصل لنک کھولیں",
         watchNow: "ابھی دیکھیں", shareShort: "شیئر", inLibraryNote: "نیچے آپ کی لائبریری میں محفوظ", directStarted: "براؤزر کے ڈاؤن لوڈز میں ڈاؤن لوڈ ہو رہا ہے",
         saveInTool: "ٹول میں رکھیں", savingInTool: "ٹول میں محفوظ ہو رہا ہے… {p}%", savedInTool: "آپ کی لائبریری میں محفوظ ہو گیا", library: "میری لائبریری", libraryEmpty: "ابھی یہاں کچھ نہیں۔ ویڈیو ڈاؤن لوڈ کریں اور \"ٹول میں رکھیں\" دبائیں تاکہ یہیں دیکھ سکیں۔", play: "چلائیں", delete: "حذف کریں", deleteConfirm: "یہ ویڈیو لائبریری سے حذف کریں؟", noLibrary: "یہ براؤزر ٹول میں فائلیں نہیں رکھ سکتا۔ \"فون میں محفوظ کریں\" استعمال کریں۔", fileGone: "فائل اب سرور پر نہیں ہے۔ دوبارہ ڈاؤن لوڈ کریں۔", noSpace: "فون میں کافی جگہ نہیں",
         cutFile: "یہ فائل کاٹیں", cutGo: "کاٹیں", cutHint: "دوبارہ ڈاؤن لوڈ کے بغیر۔ کسی بھی لمبائی کی ویڈیو پر کام کرتا ہے۔", cutBadRange: "آخر شروع کے بعد ہونا چاہیے", st_trimming: "کاٹا جا رہا ہے",
@@ -276,6 +288,7 @@ const I18N = {
         time: { few: 'چند سیکنڈ', half: 'آدھا منٹ', min: n => n + ' منٹ', hour: n => n + ' گھنٹے', and: ' اور ' }
     },
     hi: {
+        openSource: "मूल खोलें",
         watchNow: "अभी देखें", shareShort: "शेयर", inLibraryNote: "नीचे आपकी लाइब्रेरी में सेव", directStarted: "ब्राउज़र के डाउनलोड में डाउनलोड हो रहा है",
         saveInTool: "टूल में रखें", savingInTool: "टूल में सेव हो रहा है… {p}%", savedInTool: "आपकी लाइब्रेरी में सेव हो गया", library: "मेरी लाइब्रेरी", libraryEmpty: "अभी यहाँ कुछ नहीं। वीडियो डाउनलोड करें और \"टूल में रखें\" दबाएँ, फिर यहीं देखें।", play: "चलाएँ", delete: "हटाएँ", deleteConfirm: "यह वीडियो लाइब्रेरी से हटाएँ?", noLibrary: "यह ब्राउज़र टूल में फ़ाइलें नहीं रख सकता। \"फ़ोन में सेव करें\" इस्तेमाल करें।", fileGone: "फ़ाइल अब सर्वर पर नहीं है। फिर से डाउनलोड करें।", noSpace: "फ़ोन में पर्याप्त जगह नहीं",
         cutFile: "यह फ़ाइल काटें", cutGo: "काटें", cutHint: "दोबारा डाउनलोड नहीं। किसी भी लंबाई के वीडियो पर काम करता है।", cutBadRange: "अंत, शुरुआत के बाद होना चाहिए", st_trimming: "काटा जा रहा है",
@@ -296,6 +309,7 @@ const I18N = {
         time: { few: 'कुछ सेकंड', half: 'आधा मिनट', min: n => n + ' मिनट', hour: n => n + ' घंटे', and: ' ' }
     },
     bn: {
+        openSource: "মূল লিংক খুলুন",
         watchNow: "এখনই দেখুন", shareShort: "শেয়ার", inLibraryNote: "নিচে আপনার লাইব্রেরিতে সেভ হয়েছে", directStarted: "ব্রাউজারের ডাউনলোডে ডাউনলোড হচ্ছে",
         saveInTool: "টুলে রাখুন", savingInTool: "টুলে সেভ হচ্ছে… {p}%", savedInTool: "আপনার লাইব্রেরিতে সেভ হয়েছে", library: "আমার লাইব্রেরি", libraryEmpty: "এখনও কিছু নেই। ভিডিও ডাউনলোড করে \"টুলে রাখুন\" চাপুন, তারপর এখানেই দেখুন।", play: "চালান", delete: "মুছুন", deleteConfirm: "লাইব্রেরি থেকে এই ভিডিও মুছবেন?", noLibrary: "এই ব্রাউজার টুলে ফাইল রাখতে পারে না। \"ফোনে সেভ করুন\" ব্যবহার করুন।", fileGone: "ফাইলটি আর সার্ভারে নেই। আবার ডাউনলোড করুন।", noSpace: "ফোনে যথেষ্ট জায়গা নেই",
         cutFile: "এই ফাইল কাটুন", cutGo: "কাটুন", cutHint: "আবার ডাউনলোড ছাড়াই। যেকোনো দৈর্ঘ্যের ভিডিওতে কাজ করে।", cutBadRange: "শেষ সময় শুরুর পরে হতে হবে", st_trimming: "কাটা হচ্ছে",
@@ -316,6 +330,7 @@ const I18N = {
         time: { few: 'কয়েক সেকেন্ড', half: 'আধা মিনিট', min: n => n + ' মিনিট', hour: n => n + ' ঘণ্টা', and: ' ' }
     },
     id: {
+        openSource: "Buka sumber",
         watchNow: "Tonton", shareShort: "Bagikan", inLibraryNote: "Tersimpan di pustaka di bawah", directStarted: "Mengunduh di unduhan browser",
         saveInTool: "Simpan di aplikasi", savingInTool: "Menyimpan di aplikasi… {p}%", savedInTool: "Tersimpan di pustaka", library: "Pustaka saya", libraryEmpty: "Belum ada apa-apa. Unduh video lalu ketuk “Simpan di aplikasi” untuk menontonnya di sini kapan saja.", play: "Putar", delete: "Hapus", deleteConfirm: "Hapus video ini dari pustaka?", noLibrary: "Peramban ini tidak bisa menyimpan file di aplikasi. Gunakan “Simpan ke ponsel”.", fileGone: "File sudah tidak ada di server. Unduh lagi.", noSpace: "Ruang di ponsel tidak cukup",
         cutFile: "Potong file ini", cutGo: "Potong", cutHint: "Tanpa unduh ulang. Bisa untuk video berapa pun panjangnya.", cutBadRange: "Selesai harus setelah mulai", st_trimming: "Memotong",
@@ -336,6 +351,7 @@ const I18N = {
         time: { few: 'beberapa detik', half: 'setengah menit', min: n => n + ' menit', hour: n => n + ' jam', and: ' ' }
     },
     vi: {
+        openSource: "Mở nguồn gốc",
         watchNow: "Xem ngay", shareShort: "Chia sẻ", inLibraryNote: "Đã lưu trong thư viện bên dưới", directStarted: "Đang tải trong mục tải xuống của trình duyệt",
         saveInTool: "Giữ trong ứng dụng", savingInTool: "Đang lưu… {p}%", savedInTool: "Đã lưu vào thư viện", library: "Thư viện của tôi", libraryEmpty: "Chưa có gì. Tải video và nhấn “Giữ trong ứng dụng” để xem tại đây bất cứ lúc nào.", play: "Phát", delete: "Xóa", deleteConfirm: "Xóa video này khỏi thư viện?", noLibrary: "Trình duyệt này không thể lưu tệp trong ứng dụng. Dùng “Lưu vào điện thoại”.", fileGone: "Tệp không còn trên máy chủ. Hãy tải lại.", noSpace: "Điện thoại không đủ dung lượng",
         cutFile: "Cắt tệp này", cutGo: "Cắt", cutHint: "Không cần tải lại. Dùng được cho video dài bao nhiêu cũng được.", cutBadRange: "Kết thúc phải sau bắt đầu", st_trimming: "Đang cắt",
@@ -356,6 +372,7 @@ const I18N = {
         time: { few: 'vài giây', half: 'nửa phút', min: n => n + ' phút', hour: n => n + ' giờ', and: ' ' }
     },
     th: {
+        openSource: "เปิดต้นฉบับ",
         watchNow: "ดูเลย", shareShort: "แชร์", inLibraryNote: "บันทึกไว้ในคลังด้านล่างแล้ว", directStarted: "กำลังดาวน์โหลดในรายการดาวน์โหลดของเบราว์เซอร์",
         saveInTool: "เก็บไว้ในแอป", savingInTool: "กำลังบันทึกในแอป… {p}%", savedInTool: "บันทึกในคลังแล้ว", library: "คลังของฉัน", libraryEmpty: "ยังไม่มีอะไร ดาวน์โหลดวิดีโอแล้วแตะ “เก็บไว้ในแอป” เพื่อดูที่นี่ได้ตลอด", play: "เล่น", delete: "ลบ", deleteConfirm: "ลบวิดีโอนี้ออกจากคลัง?", noLibrary: "เบราว์เซอร์นี้เก็บไฟล์ในแอปไม่ได้ ใช้ “บันทึกลงโทรศัพท์” แทน", fileGone: "ไฟล์ไม่อยู่บนเซิร์ฟเวอร์แล้ว ดาวน์โหลดใหม่", noSpace: "พื้นที่ในโทรศัพท์ไม่พอ",
         cutFile: "ตัดไฟล์นี้", cutGo: "ตัด", cutHint: "ไม่ต้องดาวน์โหลดใหม่ ใช้ได้กับวิดีโอทุกความยาว", cutBadRange: "จุดจบต้องอยู่หลังจุดเริ่ม", st_trimming: "กำลังตัด",
@@ -376,6 +393,7 @@ const I18N = {
         time: { few: 'ไม่กี่วินาที', half: 'ครึ่งนาที', min: n => n + ' นาที', hour: n => n + ' ชั่วโมง', and: ' ' }
     },
     zh: {
+        openSource: "打开原链接",
         watchNow: "立即观看", shareShort: "分享", inLibraryNote: "已保存到下方的媒体库", directStarted: "正在浏览器下载中下载",
         saveInTool: "保存在工具里", savingInTool: "正在保存… {p}%", savedInTool: "已保存到你的媒体库", library: "我的媒体库", libraryEmpty: "这里还没有内容。下载视频后点“保存在工具里”，随时在这里观看。", play: "播放", delete: "删除", deleteConfirm: "要从媒体库删除这个视频吗？", noLibrary: "此浏览器无法在工具中保存文件，请用“保存到手机”。", fileGone: "服务器上已没有这个文件，请重新下载。", noSpace: "手机空间不足",
         cutFile: "剪辑此文件", cutGo: "剪辑", cutHint: "无需重新下载，任何长度的视频都可以。", cutBadRange: "结束时间必须晚于开始时间", st_trimming: "正在剪辑",
@@ -396,6 +414,7 @@ const I18N = {
         time: { few: '几秒', half: '半分钟', min: n => n + ' 分钟', hour: n => n + ' 小时', and: ' ' }
     },
     ja: {
+        openSource: "元のページを開く",
         watchNow: "今すぐ見る", shareShort: "共有", inLibraryNote: "下のライブラリに保存しました", directStarted: "ブラウザのダウンロードで保存中",
         saveInTool: "ツール内に保存", savingInTool: "ツールに保存中… {p}%", savedInTool: "ライブラリに保存しました", library: "マイライブラリ", libraryEmpty: "まだ何もありません。動画をダウンロードして「ツール内に保存」を押すと、ここでいつでも見られます。", play: "再生", delete: "削除", deleteConfirm: "この動画をライブラリから削除しますか？", noLibrary: "このブラウザはツール内にファイルを保存できません。「スマホに保存」を使ってください。", fileGone: "ファイルはもうサーバーにありません。もう一度ダウンロードしてください。", noSpace: "スマホの空き容量が足りません",
         cutFile: "このファイルをカット", cutGo: "カット", cutHint: "再ダウンロード不要。どんな長さの動画でも使えます。", cutBadRange: "終了は開始より後にしてください", st_trimming: "カット中",
@@ -416,6 +435,7 @@ const I18N = {
         time: { few: '数秒', half: '30秒', min: n => n + '分', hour: n => n + '時間', and: '' }
     },
     ko: {
+        openSource: "원본 열기",
         watchNow: "지금 보기", shareShort: "공유", inLibraryNote: "아래 보관함에 저장했어요", directStarted: "브라우저 다운로드에서 받는 중",
         saveInTool: "도구에 보관", savingInTool: "도구에 저장 중… {p}%", savedInTool: "보관함에 저장했어요", library: "내 보관함", libraryEmpty: "아직 아무것도 없어요. 동영상을 다운로드하고 “도구에 보관”을 누르면 여기서 언제든 볼 수 있어요.", play: "재생", delete: "삭제", deleteConfirm: "이 동영상을 보관함에서 삭제할까요?", noLibrary: "이 브라우저는 도구에 파일을 보관할 수 없어요. “휴대폰에 저장”을 사용하세요.", fileGone: "서버에 더 이상 파일이 없어요. 다시 다운로드하세요.", noSpace: "휴대폰 저장 공간이 부족해요",
         cutFile: "이 파일 자르기", cutGo: "자르기", cutHint: "다시 다운로드할 필요 없어요. 길이에 상관없이 사용할 수 있어요.", cutBadRange: "끝은 시작 이후여야 해요", st_trimming: "자르는 중",
