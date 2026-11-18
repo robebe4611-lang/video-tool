@@ -668,16 +668,17 @@ async function saveToLibrary() {
         const res = await fetch('/api/job/' + doneMeta.jobId + '/file');
         if (!res.ok || !res.body) throw new Error(t('fileGone'));
         const total = +res.headers.get('content-length') || doneMeta.bytes || 0;
-        const reader = res.body.getReader();
-        let got = 0;
-        for (;;) {
-            const { done, value } = await reader.read();
-            if (done) break;
-            await writable.write(value);
-            got += value.length;
-            if (total) label.textContent = t('savingInTool', { p: Math.floor(got / total * 100) });
-        }
-        await writable.close();
+        let got = 0, lastPct = -1;
+        // Native stream piping into the file: much faster than writing chunk by chunk
+        const counter = new TransformStream({
+            transform(chunk, ctrl) {
+                got += chunk.byteLength;
+                const pct = total ? Math.floor(got / total * 100) : -1;
+                if (pct !== lastPct) { lastPct = pct; label.textContent = t('savingInTool', { p: pct }); }
+                ctrl.enqueue(chunk);
+            }
+        });
+        await res.body.pipeThrough(counter).pipeTo(writable);
         const list = libLoad();
         list.unshift({ id, file: id + ext, name: doneMeta.fileName, bytes: got, date: Date.now() });
         libStore(list);
