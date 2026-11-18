@@ -51,6 +51,19 @@
         </button>
     </header>
 
+    <!-- Search: opens a video search, results come back via Share -->
+    <form id="searchForm" class="mb-6" onsubmit="event.preventDefault(); webSearch();">
+        <div class="flex gap-2">
+            <div class="relative w-full min-w-0">
+                <svg class="absolute top-1/2 -translate-y-1/2 start-3.5 text-zinc-500" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+                <input id="searchQ" type="search" enterkeyhint="search" autocomplete="off" dir="auto"
+                    class="w-full bg-zinc-900 border border-zinc-800 rounded-2xl ps-10 pe-4 py-3.5 text-[15px] placeholder:text-zinc-600 focus:outline-none focus:border-emerald-400/60">
+            </div>
+            <button type="submit" class="press shrink-0 bg-zinc-800 hover:bg-zinc-700 px-4 rounded-2xl text-sm" data-t="searchBtn"></button>
+        </div>
+        <p class="text-xs text-zinc-500 mt-2 leading-relaxed" data-t="searchHint"></p>
+    </form>
+
     <!-- Step 1: link -->
     <section class="mb-5">
         <label for="videoUrl" class="flex items-center gap-2 text-sm text-zinc-400 mb-2">
@@ -267,6 +280,7 @@ function setLang(l) {
     document.documentElement.dir = RTL.includes(l) ? 'rtl' : 'ltr';
     document.querySelectorAll('[data-t]').forEach(el => { el.textContent = t(el.dataset.t); });
     $('videoUrl').placeholder = t('placeholder');
+    $('searchQ').placeholder = t('searchPlaceholder');
     document.title = t('title');
     $('langName').textContent = (LANGS.find(x => x.code === l) || {}).name || l;
     renderLangList();
@@ -729,8 +743,30 @@ async function renderLibrary() {
     } catch { $('libUsage').textContent = ''; }
 }
 
+
+/* ---------- search + share-to-app ---------- */
+function webSearch() {
+    const q = $('searchQ').value.trim();
+    if (!q) return $('searchQ').focus();
+    window.open('https://www.google.com/search?tbm=vid&q=' + encodeURIComponent(q), '_blank', 'noopener');
+}
+
+
+
 setLang(detectLang());
 renderLibrary();
+// Opened from Android "Share" -> this app: pick the link out of the shared text and load it
+(function receiveShared() {
+    try {
+        const p = new URLSearchParams(location.search);
+        const blob = [p.get('url'), p.get('text'), p.get('title')].filter(Boolean).join(' ');
+        const m = blob.match(/https?:\/\/[^\s"'<>]+/);
+        if (!m) return;
+        history.replaceState(null, '', location.pathname);
+        $('videoUrl').value = m[0];
+        loadPreview();
+    } catch {}
+})();
 if ('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js').catch(() => {});
 </script>
 </body>
