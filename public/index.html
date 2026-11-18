@@ -525,72 +525,156 @@ function startDownload() {
     });
 }
 
-async function runDownload({ url, quality, start, end, est, suffix = '', noBg = false }) {
-    const params = new URLSearchParams({ url, quality, start, end });
-    const liveUrl = '/api/live?' + params;
+/* ---------- downloads run on the server: they keep going when you leave the app ---------- */
+// 1) the server downloads (continues even if the phone sleeps / the app is closed)
+// 2) the phone pulls the finished file into the library, resuming where it stopped
+const ACTIVE_KEY = 'activeDownload';
+function activeLoad() { try { return JSON.parse(localStorage.getItem(ACTIVE_KEY)); } catch { return null; } }
+function activeStore(a) { try { a ? localStorage.setItem(ACTIVE_KEY, JSON.stringify(a)) : localStorage.removeItem(ACTIVE_KEY); } catch {} }
 
-    // Best: Background Fetch - keeps downloading even after leaving the app (Chrome on Android)
-    const reg = noBg ? null : await bgRegistration();
-    if (reg) return bgDownload(reg, { liveUrl, url, quality, est, suffix, start, end });
-
-    // Browsers without in-app storage: let the browser download it directly (still streams)
-    if (!hasOPFS()) { location.href = liveUrl; showStatus(t('directStarted')); return; }
-    $('bgHint').classList.add('hidden');
-
+async function runDownload({ url, quality, start, end, est, suffix = '' }) {
+    if (live) return;
     $('downloadBtn').disabled = true;
     $('doneBox').classList.add('hidden');
     $('progressBox').classList.remove('hidden');
+    $('bgHint').classList.remove('hidden');
     showStatus('');
-    const id = Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
-    const ext = quality === 'mp3' ? '.mp3' : '.mp4';
-    const ctrl = new AbortController();
-    live = { ctrl, writable: null, file: id + ext, est: est || 0, t0: Date.now(), samples: [], audio: quality === 'mp3', got: 0 };
+    live = { phase: 'server', est: est || 0, t0: Date.now(), samples: [], got: 0, audio: quality === 'mp3' };
     showProgress(0);
-
     try {
-        if (navigator.storage.persist) navigator.storage.persist().catch(() => {});
-        const dir = await libDir();
-        const writable = await (await dir.getFileHandle(live.file, { create: true })).createWritable();
-        live.writable = writable;
-        const res = await fetch(liveUrl, { signal: ctrl.signal });
-        if (!res.ok || !res.body) throw new Error((await res.text()).slice(0, 300) || ('HTTP ' + res.status));
-        let name = fileNameFrom(res, (info && info.title ? info.title : 'video') + ext);
-        if (suffix) name = name.replace(/(\.[a-z0-9]+)$/i, ' ' + suffix + '$1');
-        const counter = new TransformStream({
-            transform(chunk, c) { live.got += chunk.byteLength; c.enqueue(chunk); }
-        });
-        const tick = setInterval(() => showProgress(live ? live.got : 0), 500);
-        try { await res.body.pipeThrough(counter).pipeTo(writable); }
-        finally { clearInterval(tick); }
-
-        const got = live.got;
-        const elapsed = (Date.now() - live.t0) / 1000;
-        if (got > 1e6 && elapsed > 2) saveSpeed(got / elapsed);
-        const item = { id, file: live.file, name, bytes: got, date: Date.now(), src: url, quality };
-        const list = libLoad(); list.unshift(item); libStore(list);
-        live = null;
-        renderLibrary();
-        if (await isPlayable(item)) showDone(item);
-        else {
-            await removeItem(item);
-            $('progressBox').classList.add('hidden');
-            $('downloadBtn').disabled = false;
-            showStatus(t('brokenFile'), true);
-        }
-    } catch (e) {
-        const cancelled = e.name === 'AbortError';
-        try { if (live && live.writable) await live.writable.abort(); } catch {}
-        try { if (live) (await libDir()).removeEntry(live.file); } catch {}
-        live = null;
-        $('progressBox').classList.add('hidden');
-        $('downloadBtn').disabled = false;
-        if (cancelled) showStatus(t('cancelled'));
-        else showStatus(t('failed') + (e.name === 'QuotaExceededError' ? t('noSpace') : e.message), true);
-    }
+        const params = new URLSearchParams({ url, quality, start, end, est: String(est || 0) });
+        const res = await fetch('/api/job/start?' + params);
+        const data = await res.json();
+        if (data.error) throw new Error(data.error);
+        const id = Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+        const a = { jobId: data.id, id, url, quality, start, end, est: est || 0, suffix, file: id + (quality === 'mp3' ? '.mp3' : '.mp4') };
+        activeStore(a);
+        followJob(a);
+    } catch (e) { failActive(e.message); }
 }
 
+let followSeq = 0;
+async function followJob(a) {
+    const seq = ++followSeq;
+    if (!live) live = { phase: 'server', est: a.est || 0, t0: Date.now(), samples: [], got: 0, audio: a.quality === 'mp3' };
+    $('downloadBtn').disabled = true;
+    $('doneBox').classList.add('hidden');
+    $('progressBox').classList.remove('hidden');
+    $('bgHint').classList.remove('hidden');
+    // phase 1: wait for the server download
+    for (;;) {
+        if (seq !== followSeq || !live) return;
+        live.beat = Date.now();
+        let j;
+        try {
+            const r = await fetch('/api/job/' + a.jobId);
+            if (r.status === 404) {   // server restarted (free host) - start the same download again
+                showStatus(t('serverRestarted'));
+                const res = await fetch('/api/job/start?' + new URLSearchParams({ url: a.url, quality: a.quality, start: a.start, end: a.end, est: String(a.est || 0) }));
+                const d = await res.json();
+                if (d.error) throw new Error(d.error);
+                a.jobId = d.id; activeStore(a);
+                continue;
+            }
+            j = await r.json();
+        } catch (e) {
+            if (e.message && !/fetch|network|load/i.test(e.message)) return failActive(e.message);
+            await sleep(3000); continue;   // offline for a moment - keep waiting
+        }
+        if (j.status === 'error') return failActive(j.error || '');
+        if (j.status === 'cancelled') return failActive(t('cancelled'));
+        if (j.status === 'done') { a.name = j.fileName; a.bytes = j.bytes; activeStore(a); break; }
+        showServerProgress(j);
+        await sleep(1000);
+    }
+    // phase 2: bring the file to the phone (resumable)
+    if (!hasOPFS()) {   // no in-app storage: hand it to the browser's downloads
+        activeStore(null); live = null;
+        $('progressBox').classList.add('hidden'); $('downloadBtn').disabled = false;
+        location.href = '/api/job/' + a.jobId + '/file';
+        return showStatus(t('directStarted'));
+    }
+    await pullToPhone(a, seq);
+}
+
+async function pullToPhone(a, seq) {
+    live.phase = 'phone'; live.samples = []; live.t0 = Date.now(); live.est = a.bytes || 0;
+    for (let attempt = 0; attempt < 30; attempt++) {
+        if (seq !== followSeq || !live) return;
+        try {
+            const dir = await libDir();
+            const fh = await dir.getFileHandle(a.file, { create: true });
+            const have = (await fh.getFile()).size;
+            if (a.bytes && have >= a.bytes) break;
+            live.ctrl = new AbortController();
+            const res = await fetch('/api/job/' + a.jobId + '/file', { signal: live.ctrl.signal, headers: have ? { Range: 'bytes=' + have + '-' } : {} });
+            if (res.status === 404) throw Object.assign(new Error('gone'), { gone: true });
+            if (!res.ok || !res.body) throw new Error('HTTP ' + res.status);
+            const resumed = res.status === 206;
+            const w = await fh.createWritable({ keepExistingData: resumed });
+            if (resumed) await w.seek(have);
+            live.got = resumed ? have : 0;
+            const counter = new TransformStream({ transform(c, ctl) { if (live) { live.got += c.byteLength; live.beat = Date.now(); } ctl.enqueue(c); } });
+            const tick = setInterval(() => showProgress(live ? live.got : 0), 500);
+            try { await res.body.pipeThrough(counter).pipeTo(w); } finally { clearInterval(tick); }
+            break;
+        } catch (e) {
+            if (e.name === 'AbortError' && (seq !== followSeq || !live)) return;
+            if (e.gone) {   // the server no longer has the file (restarted): download again
+                try { (await libDir()).removeEntry(a.file); } catch {}
+                activeStore(null); live = null;
+                showStatus(t('serverRestarted'));
+                return runDownload(a);
+            }
+            await sleep(2000);   // connection dropped (app was in background) - resume
+        }
+    }
+    if (seq !== followSeq || !live) return;
+    let name = a.name || 'video';
+    if (a.suffix) name = name.replace(/(\.[a-z0-9]+)$/i, ' ' + a.suffix + '$1');
+    const file = await (await (await libDir()).getFileHandle(a.file)).getFile();
+    const item = { id: a.id, file: a.file, name, bytes: file.size, date: Date.now(), src: a.url, quality: a.quality };
+    const elapsed = (Date.now() - live.t0) / 1000;
+    if (file.size > 1e6 && elapsed > 2) saveSpeed(file.size / elapsed);
+    const list = libLoad(); list.unshift(item); libStore(list);
+    activeStore(null); live = null;
+    renderLibrary();
+    if (await isPlayable(item)) showDone(item);
+    else { await removeItem(item); $('progressBox').classList.add('hidden'); $('downloadBtn').disabled = false; showStatus(t('brokenFile'), true); }
+}
+
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+function showServerProgress(j) {
+    if (!live) return;
+    const stage = STAGE_KEYS[j.stage] ? t(STAGE_KEYS[j.stage]) : t('st_working');
+    $('stageText').textContent = stage;
+    const bar = $('bar');
+    if (j.percent !== null && j.percent !== undefined) {
+        bar.classList.remove('bar-indet');
+        bar.style.width = Math.min(100, j.percent) + '%';
+        $('percentText').textContent = Math.floor(j.percent) + '%';
+    } else {
+        bar.style.width = '100%'; bar.classList.add('bar-indet');
+        $('percentText').textContent = '';
+    }
+    if (j.eta && !isNaN(etaToSec(j.eta))) $('etaBig').textContent = t('left', { t: humanDuration(etaToSec(j.eta)) });
+    else $('etaBig').textContent = j.elapsed ? t('elapsedT', { t: j.elapsed }) : t('calc');
+    const done = formatBytes(j.bytes), total = formatBytes(j.total);
+    $('sizeText').textContent = done ? (total ? `${done} / ${total}` : done) : '';
+    $('speedText').textContent = j.speed || '';
+}
+
+// phone transfer progress (phase 2)
 function showProgress(got) {
     if (!live) return;
+    if (live.phase === 'server' && !got) {
+        $('stageText').textContent = t('st_connecting');
+        $('etaBig').textContent = t('calc');
+        $('bar').style.width = '100%'; $('bar').classList.add('bar-indet');
+        $('percentText').textContent = ''; $('sizeText').textContent = ''; $('speedText').textContent = '';
+        return;
+    }
     const now = Date.now();
     live.samples.push([now, got]);
     while (live.samples.length > 2 && now - live.samples[0][0] > 6000) live.samples.shift();
@@ -598,34 +682,45 @@ function showProgress(got) {
     const rate = now > t0 ? (got - b0) / ((now - t0) / 1000) : 0;
     const est = live.est;
     const pct = est ? Math.min(99, got / est * 100) : null;
-    $('stageText').textContent = got ? t(live.audio ? 'st_audio' : 'st_video') : t('st_connecting');
+    $('stageText').textContent = t('toPhone');
     const bar = $('bar');
-    if (pct !== null && got) {
-        bar.classList.remove('bar-indet');
-        bar.style.width = pct + '%';
-        $('percentText').textContent = Math.floor(pct) + '%';
-    } else {
-        bar.style.width = '100%';
-        bar.classList.add('bar-indet');
-        $('percentText').textContent = '';
-    }
-    if (est && rate > 0 && got < est) $('etaBig').textContent = t('left', { t: humanDuration((est - got) / rate) });
-    else if (!got) $('etaBig').textContent = t('calc');
-    else $('etaBig').textContent = t('elapsedT', { t: Math.round((now - live.t0) / 1000) });
-    $('sizeText').textContent = got ? (est ? `${formatBytes(got)} / ${formatBytes(est)}` : formatBytes(got)) : '';
+    if (pct !== null) { bar.classList.remove('bar-indet'); bar.style.width = pct + '%'; $('percentText').textContent = Math.floor(pct) + '%'; }
+    else { bar.style.width = '100%'; bar.classList.add('bar-indet'); $('percentText').textContent = ''; }
+    $('etaBig').textContent = est && rate > 0 && got < est ? t('left', { t: humanDuration((est - got) / rate) }) : t('calc');
+    $('sizeText').textContent = est ? `${formatBytes(got)} / ${formatBytes(est)}` : formatBytes(got);
     $('speedText').textContent = rate > 0 ? (rate / 1024 / 1024).toFixed(1) + ' MB/s' : '';
 }
 
-function cancelDownload() {
-    if (!live) return;
-    if (live.bg) {
-        live.bg.abort().catch(() => {});
-        live = null;
-        $('progressBox').classList.add('hidden');
-        $('downloadBtn').disabled = false;
-        showStatus(t('cancelled'));
-    } else live.ctrl.abort();
+function failActive(msg) {
+    const a = activeLoad();
+    if (a) { libDir().then(d => d.removeEntry(a.file)).catch(() => {}); }
+    activeStore(null); live = null; followSeq++;
+    $('progressBox').classList.add('hidden');
+    $('downloadBtn').disabled = false;
+    showStatus(t('failed') + msg, true);
 }
+
+function cancelDownload() {
+    const a = activeLoad();
+    if (a && a.jobId) fetch('/api/job/' + a.jobId + '/cancel').catch(() => {});
+    if (a) { libDir().then(d => d.removeEntry(a.file)).catch(() => {}); }
+    if (live && live.ctrl) { try { live.ctrl.abort(); } catch {} }
+    activeStore(null); live = null; followSeq++;
+    $('progressBox').classList.add('hidden');
+    $('downloadBtn').disabled = false;
+    showStatus(t('cancelled'));
+}
+
+// Coming back to the app: pick up the download where it is
+function resumeActive() {
+    const a = activeLoad();
+    if (!a) return;
+    if (live && live.beat && Date.now() - live.beat < 5000) return;   // still running fine
+    if (live && live.ctrl) { try { live.ctrl.abort(); } catch {} }
+    live = null;
+    followJob(a);
+}
+document.addEventListener('visibilitychange', () => { if (!document.hidden) resumeActive(); });
 
 /* ---------- check a saved file really plays (catches interrupted / glued downloads) ---------- */
 async function isPlayable(item) {
@@ -664,74 +759,7 @@ async function verifyOrRetry(item) {
     return false;
 }
 
-/* ---------- background downloads (continue when the app is closed) ---------- */
 const FILES_CACHE = 'library-files';
-
-async function bgRegistration() {
-    try {
-        if (!('serviceWorker' in navigator) || !('BackgroundFetchManager' in window)) return null;
-        const reg = await navigator.serviceWorker.ready;
-        return reg.backgroundFetch ? reg : null;
-    } catch { return null; }
-}
-
-async function bgDownload(reg, { liveUrl, url, quality, est, suffix, start, end }) {
-    const id = 'dl-' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
-    const ext = quality === 'mp3' ? '.mp3' : '.mp4';
-    const name = ((info && info.title) || 'video') + ext;
-    $('downloadBtn').disabled = true;
-    $('doneBox').classList.add('hidden');
-    $('progressBox').classList.remove('hidden');
-    $('bgHint').classList.remove('hidden');
-    showStatus('');
-    try {
-        const cache = await caches.open(FILES_CACHE);
-        await cache.put('/lib-pending/' + id, new Response(JSON.stringify({
-            src: url, quality, name, suffix, est,
-            doneText: t('bgDoneTitle'), failText: t('bgFailTitle')
-        })));
-        const bg = await reg.backgroundFetch.fetch(id, [liveUrl], {
-            title: t('bgTitle', { n: name }),
-            icons: [{ src: '/icon-192.png', sizes: '192x192', type: 'image/png' }]
-        });
-        watchBg(bg, est);
-        // Watchdog: if the phone doesn't start the background download, use the in-app one instead
-        setTimeout(() => {
-            if (live && live.bg === bg && !bg.downloaded && bg.result === '') {
-                console.warn('background fetch stalled - falling back');
-                bg.abort().catch(() => {});
-                live = null;
-                $('bgHint').classList.add('hidden');
-                runDownload({ url, quality, start, end, est, suffix, noBg: true });
-            }
-        }, 15000);
-    } catch (e) {
-        // Background download refused (permissions, storage...) - fall back to the in-app download
-        console.warn('background fetch unavailable:', e);
-        $('bgHint').classList.add('hidden');
-        return runDownload({ url, quality, start, end, est, suffix, noBg: true });
-    }
-}
-
-function watchBg(bg, est) {
-    live = { bg, est: est || 0, t0: Date.now(), samples: [], audio: false, got: bg.downloaded || 0 };
-    $('progressBox').classList.remove('hidden');
-    $('bgHint').classList.remove('hidden');
-    $('downloadBtn').disabled = true;
-    showProgress(live.got);
-    bg.addEventListener('progress', async () => {
-        if (!live || live.bg !== bg) return;
-        live.got = bg.downloaded;
-        showProgress(live.got);
-        if (bg.result === 'failure') {
-            live = null;
-            $('progressBox').classList.add('hidden');
-            $('downloadBtn').disabled = false;
-            showStatus(t('failed') + (bg.failureReason || ''), true);
-        }
-    });
-}
-
 // Pull downloads that finished in the background into the library list
 async function syncBackground() {
     try {
@@ -752,42 +780,6 @@ async function syncBackground() {
         return good;
     } catch { return []; }
 }
-
-if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.addEventListener('message', async e => {
-        const msg = e.data || {};
-        if (msg.type === 'bg-done') {
-            const added = await syncBackground();
-            const item = added.find(x => x.id === msg.id);
-            if (live && live.bg && live.bg.id === msg.id) { live = null; if (item) showDone(item); }
-        } else if (msg.type === 'bg-fail' && live && live.bg && live.bg.id === msg.id) {
-            live = null;
-            $('progressBox').classList.add('hidden');
-            $('downloadBtn').disabled = false;
-            showStatus(t('bgFailTitle'), true);
-        }
-    });
-}
-
-// When coming back to the app: add finished downloads, and re-attach to one still running
-async function resumeBackground() {
-    await syncBackground();
-    const reg = await bgRegistration();
-    if (!reg || live) return;
-    try {
-        const ids = await reg.backgroundFetch.getIds();
-        for (const id of ids) {
-            const bg = await reg.backgroundFetch.get(id);
-            if (bg && bg.result === '') {
-                let est = 0;
-                try { const p = await (await caches.open(FILES_CACHE)).match('/lib-pending/' + id); if (p) est = (await p.json()).est || 0; } catch {}
-                watchBg(bg, est);
-                break;
-            }
-        }
-    } catch {}
-}
-document.addEventListener('visibilitychange', () => { if (!document.hidden) resumeBackground(); });
 
 function showDone(item) {
     $('progressBox').classList.add('hidden');
@@ -946,7 +938,8 @@ function webSearch() {
 
 setLang(detectLang());
 renderLibrary();
-resumeBackground();
+syncBackground();
+resumeActive();
 // Opened from Android "Share" -> this app: pick the link out of the shared text and load it
 (function receiveShared() {
     try {

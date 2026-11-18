@@ -409,6 +409,7 @@ app.get('/api/job/start', (req, res) => {
             return;
         }
         job.status = 'done';
+        job.finishedAt = Date.now();
         job.percent = 100;
         job.stage = 'מוכן!';
         job.fileName = safeName(job.title) + path.extname(job.file);
@@ -490,6 +491,7 @@ app.get('/api/job/:id/trim', (req, res) => {
         }
         job.file = out;
         job.status = 'done';
+        job.finishedAt = Date.now();
         job.percent = 100;
         job.stage = 'מוכן!';
         const tag = `${start || '00:00:00'}-${end || 'end'}`.replace(/:/g, '.');
@@ -520,6 +522,17 @@ setInterval(() => {
     }
     for (const [k, v] of previewCache) if (v.expires < now) previewCache.delete(k);
 }, 5 * 60 * 1000);
+
+// Free hosts (Render) put the server to sleep after ~15 min without visitors, which would
+// kill a long download while the user is away. While a download runs (or a finished file
+// is waiting to be picked up), the server visits its own public address to stay awake.
+const PUBLIC_URL = process.env.RENDER_EXTERNAL_URL || '';
+if (PUBLIC_URL) {
+    setInterval(() => {
+        const busy = [...jobs.values()].some(j => j.status === 'running' || (j.status === 'done' && Date.now() - (j.finishedAt || Date.now()) < JOB_TTL));
+        if (busy) fetch(PUBLIC_URL + '/healthz').catch(() => {});
+    }, 4 * 60 * 1000);
+}
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, (err) => {
