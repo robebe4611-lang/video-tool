@@ -597,36 +597,87 @@ async function followJob(a) {
     await pullToPhone(a, seq);
 }
 
+/* Writes go straight into the file from a worker (sync access handle), flushed every few MB,
+   so if the app is closed mid-transfer the part already received is kept and we resume from it. */
+let writerWorker = null, writerSeq = 0;
+const writerWaits = new Map();
+function writerCall(msg, transfer) {
+    if (!writerWorker) {
+        const code = `let h = null;
+onmessage = async (e) => { const m = e.data; try {
+  if (m.cmd === 'open') {
+    if (h) { h.flush(); h.close(); h = null; }
+    const dir = await (await navigator.storage.getDirectory()).getDirectoryHandle('library', { create: true });
+    const fh = await dir.getFileHandle(m.name, { create: true });
+    h = await fh.createSyncAccessHandle();
+    postMessage({ id: m.id, size: h.getSize() });
+  } else if (m.cmd === 'write') {
+    h.write(new Uint8Array(m.buf), { at: m.at }); if (m.flush) h.flush(); postMessage({ id: m.id });
+  } else if (m.cmd === 'truncate') {
+    h.truncate(m.size); h.flush(); postMessage({ id: m.id });
+  } else if (m.cmd === 'close') {
+    if (h) { h.flush(); h.close(); h = null; } postMessage({ id: m.id });
+  }
+} catch (err) { postMessage({ id: m.id, error: (err && err.name) + ': ' + (err && err.message) }); } };`;
+        writerWorker = new Worker(URL.createObjectURL(new Blob([code], { type: 'text/javascript' })));
+        writerWorker.onmessage = e => { const w = writerWaits.get(e.data.id); if (w) { writerWaits.delete(e.data.id); e.data.error ? w.reject(new Error(e.data.error)) : w.resolve(e.data); } };
+    }
+    const id = ++writerSeq;
+    return new Promise((resolve, reject) => { writerWaits.set(id, { resolve, reject }); writerWorker.postMessage({ ...msg, id }, transfer || []); });
+}
+
 async function pullToPhone(a, seq) {
     live.phase = 'phone'; live.samples = []; live.t0 = Date.now(); live.est = a.bytes || 0;
-    for (let attempt = 0; attempt < 30; attempt++) {
+    for (let attempt = 0; attempt < 40; attempt++) {
         if (seq !== followSeq || !live) return;
         try {
-            const dir = await libDir();
-            const fh = await dir.getFileHandle(a.file, { create: true });
-            const have = (await fh.getFile()).size;
-            if (a.bytes && have >= a.bytes) break;
+            const have = (await writerCall({ cmd: 'open', name: a.file })).size;
+            if (a.bytes && have >= a.bytes) { await writerCall({ cmd: 'close' }); break; }
             live.ctrl = new AbortController();
             const res = await fetch('/api/job/' + a.jobId + '/file', { signal: live.ctrl.signal, headers: have ? { Range: 'bytes=' + have + '-' } : {} });
             if (res.status === 404) throw Object.assign(new Error('gone'), { gone: true });
             if (!res.ok || !res.body) throw new Error('HTTP ' + res.status);
             const resumed = res.status === 206;
-            const w = await fh.createWritable({ keepExistingData: resumed });
-            if (resumed) await w.seek(have);
-            live.got = resumed ? have : 0;
-            const counter = new TransformStream({ transform(c, ctl) { if (live) { live.got += c.byteLength; live.beat = Date.now(); } ctl.enqueue(c); } });
+            if (!resumed && have) await writerCall({ cmd: 'truncate', size: 0 });
+            let pos = resumed ? have : 0, sinceFlush = 0, parts = [], partLen = 0;
+            live.got = pos;
             const tick = setInterval(() => showProgress(live ? live.got : 0), 500);
-            try { await res.body.pipeThrough(counter).pipeTo(w); } finally { clearInterval(tick); }
+            const writeOut = async (flush) => {
+                if (!partLen) return;
+                const chunk = new Uint8Array(partLen); let o = 0;
+                for (const p of parts) { chunk.set(p, o); o += p.length; }
+                parts = []; sinceFlush += partLen; const len = partLen; partLen = 0;
+                const doFlush = flush || sinceFlush >= 4 * 1024 * 1024;
+                await writerCall({ cmd: 'write', buf: chunk.buffer, at: pos, flush: doFlush }, [chunk.buffer]);
+                if (doFlush) sinceFlush = 0;
+                pos += len;
+                if (live) { live.got = pos; live.beat = Date.now(); }
+            };
+            try {
+                const reader = res.body.getReader();
+                for (;;) {
+                    const { done, value } = await reader.read();
+                    if (done) break;
+                    parts.push(value); partLen += value.length;
+                    if (partLen >= 1024 * 1024) await writeOut(false);
+                }
+                await writeOut(true);
+            } finally {
+                clearInterval(tick);
+                try { await writeOut(true); } catch {}
+                try { await writerCall({ cmd: 'close' }); } catch {}
+            }
             break;
         } catch (e) {
             if (e.name === 'AbortError' && (seq !== followSeq || !live)) return;
             if (e.gone) {   // the server no longer has the file (restarted): download again
+                try { await writerCall({ cmd: 'close' }); } catch {}
                 try { (await libDir()).removeEntry(a.file); } catch {}
                 activeStore(null); live = null;
                 showStatus(t('serverRestarted'));
                 return runDownload(a);
             }
-            await sleep(2000);   // connection dropped (app was in background) - resume
+            await sleep(2000);   // connection dropped (app was in background) - resume from what we have
         }
     }
     if (seq !== followSeq || !live) return;
@@ -693,7 +744,7 @@ function showProgress(got) {
 
 function failActive(msg) {
     const a = activeLoad();
-    if (a) { libDir().then(d => d.removeEntry(a.file)).catch(() => {}); }
+    if (a) { writerCall({ cmd: 'close' }).catch(() => {}).then(() => libDir()).then(d => d.removeEntry(a.file)).catch(() => {}); }
     activeStore(null); live = null; followSeq++;
     $('progressBox').classList.add('hidden');
     $('downloadBtn').disabled = false;
@@ -703,7 +754,7 @@ function failActive(msg) {
 function cancelDownload() {
     const a = activeLoad();
     if (a && a.jobId) fetch('/api/job/' + a.jobId + '/cancel').catch(() => {});
-    if (a) { libDir().then(d => d.removeEntry(a.file)).catch(() => {}); }
+    if (a) { writerCall({ cmd: 'close' }).catch(() => {}).then(() => libDir()).then(d => d.removeEntry(a.file)).catch(() => {}); }
     if (live && live.ctrl) { try { live.ctrl.abort(); } catch {} }
     activeStore(null); live = null; followSeq++;
     $('progressBox').classList.add('hidden');
