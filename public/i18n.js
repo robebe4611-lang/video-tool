@@ -35,6 +35,7 @@ const RTL = ['he', 'ar', 'fa', 'ur'];
 
 const I18N = {
     en: {
+        bgHint: "You can leave the app – the download continues in the background", bgTitle: "Downloading: {n}", bgDoneTitle: "Saved in Video Tool", bgFailTitle: "Download failed",
         searchPlaceholder: "Search for a video…", searchBtn: "Search", searchHint: "Found a video? Tap Share → Video Tool, and it opens here ready to download.",
         openSource: "Open original",
         watchNow: "Watch now", shareShort: "Share", inLibraryNote: "Saved in your library below", directStarted: "Downloading in your browser's downloads",
@@ -58,6 +59,7 @@ const I18N = {
         time: { few: 'a few seconds', half: 'half a minute', min: n => n === 1 ? '1 minute' : n + ' minutes', hour: n => n === 1 ? '1 hour' : n + ' hours', and: ' ' }
     },
     he: {
+        bgHint: "אפשר לצאת מהאפליקציה – ההורדה ממשיכה ברקע", bgTitle: "מוריד: {n}", bgDoneTitle: "נשמר ב-Video Tool", bgFailTitle: "ההורדה נכשלה",
         searchPlaceholder: "חפש סרטון…", searchBtn: "חפש", searchHint: "מצאת סרטון? לחץ שתף ← Video Tool, והוא ייפתח כאן מוכן להורדה.",
         openSource: "פתח את המקור",
         watchNow: "צפה עכשיו", shareShort: "שתף", inLibraryNote: "נשמר בספרייה שלך למטה", directStarted: "ההורדה מתבצעת בהורדות של הדפדפן",
@@ -80,6 +82,7 @@ const I18N = {
         time: { few: 'כמה שניות', half: 'חצי דקה', min: n => n === 1 ? 'דקה' : n === 2 ? 'שתי דקות' : n + ' דקות', hour: n => n === 1 ? 'שעה' : n === 2 ? 'שעתיים' : n + ' שעות', and: ' ו-' }
     },
     ar: {
+        bgHint: "يمكنك مغادرة التطبيق – التنزيل يستمر في الخلفية", bgTitle: "جارٍ التنزيل: {n}", bgDoneTitle: "تم الحفظ في Video Tool", bgFailTitle: "فشل التنزيل",
         searchPlaceholder: "ابحث عن فيديو…", searchBtn: "بحث", searchHint: "وجدت فيديو؟ اضغط مشاركة ← Video Tool، وسيفتح هنا جاهزًا للتنزيل.",
         openSource: "افتح المصدر",
         watchNow: "شاهد الآن", shareShort: "مشاركة", inLibraryNote: "تم الحفظ في مكتبتك بالأسفل", directStarted: "يتم التنزيل في تنزيلات المتصفح",
@@ -102,6 +105,7 @@ const I18N = {
         time: { few: 'بضع ثوانٍ', half: 'نصف دقيقة', min: n => n === 1 ? 'دقيقة' : n === 2 ? 'دقيقتان' : n <= 10 ? n + ' دقائق' : n + ' دقيقة', hour: n => n === 1 ? 'ساعة' : n === 2 ? 'ساعتان' : n <= 10 ? n + ' ساعات' : n + ' ساعة', and: ' و' }
     },
     es: {
+        bgHint: "Puedes salir de la app: la descarga sigue en segundo plano", bgTitle: "Descargando: {n}", bgDoneTitle: "Guardado en Video Tool", bgFailTitle: "Error en la descarga",
         searchPlaceholder: "Busca un vídeo…", searchBtn: "Buscar", searchHint: "¿Encontraste un vídeo? Pulsa Compartir → Video Tool y se abrirá aquí listo para descargar.",
         openSource: "Abrir original",
         watchNow: "Ver ahora", shareShort: "Compartir", inLibraryNote: "Guardado en tu biblioteca, abajo", directStarted: "Descargando en las descargas del navegador",
@@ -124,6 +128,7 @@ const I18N = {
         time: { few: 'unos segundos', half: 'medio minuto', min: n => n === 1 ? '1 minuto' : n + ' minutos', hour: n => n === 1 ? '1 hora' : n + ' horas', and: ' y ' }
     },
     pt: {
+        bgHint: "Você pode sair do app – o download continua em segundo plano", bgTitle: "Baixando: {n}", bgDoneTitle: "Salvo no Video Tool", bgFailTitle: "Falha no download",
         searchPlaceholder: "Procure um vídeo…", searchBtn: "Buscar", searchHint: "Achou um vídeo? Toque em Compartilhar → Video Tool e ele abre aqui pronto para baixar.",
         openSource: "Abrir original",
         watchNow: "Assistir agora", shareShort: "Compartilhar", inLibraryNote: "Salvo na sua biblioteca, abaixo", directStarted: "Baixando nos downloads do navegador",
@@ -146,6 +151,7 @@ const I18N = {
         time: { few: 'alguns segundos', half: 'meio minuto', min: n => n === 1 ? '1 minuto' : n + ' minutos', hour: n => n === 1 ? '1 hora' : n + ' horas', and: ' e ' }
     },
     fr: {
+        bgHint: "Vous pouvez quitter l'app – le téléchargement continue en arrière-plan", bgTitle: "Téléchargement : {n}", bgDoneTitle: "Enregistré dans Video Tool", bgFailTitle: "Échec du téléchargement",
         searchPlaceholder: "Rechercher une vidéo…", searchBtn: "Chercher", searchHint: "Vidéo trouvée ? Touchez Partager → Video Tool, elle s'ouvre ici prête à télécharger.",
         openSource: "Ouvrir l'original",
         watchNow: "Regarder", shareShort: "Partager", inLibraryNote: "Enregistré dans votre bibliothèque ci-dessous", directStarted: "Téléchargement dans les téléchargements du navigateur",
@@ -168,6 +174,7 @@ const I18N = {
         time: { few: 'quelques secondes', half: 'une demi-minute', min: n => n === 1 ? '1 minute' : n + ' minutes', hour: n => n === 1 ? '1 heure' : n + ' heures', and: ' et ' }
     },
     de: {
+        bgHint: "Du kannst die App verlassen – der Download läuft im Hintergrund weiter", bgTitle: "Lädt: {n}", bgDoneTitle: "In Video Tool gespeichert", bgFailTitle: "Download fehlgeschlagen",
         searchPlaceholder: "Nach einem Video suchen…", searchBtn: "Suchen", searchHint: "Video gefunden? Tippe auf Teilen → Video Tool, und es öffnet sich hier zum Download.",
         openSource: "Original öffnen",
         watchNow: "Jetzt ansehen", shareShort: "Teilen", inLibraryNote: "In deiner Bibliothek unten gespeichert", directStarted: "Download läuft in den Browser-Downloads",
@@ -190,6 +197,7 @@ const I18N = {
         time: { few: 'wenige Sekunden', half: 'eine halbe Minute', min: n => n === 1 ? '1 Minute' : n + ' Minuten', hour: n => n === 1 ? '1 Stunde' : n + ' Stunden', and: ' und ' }
     },
     it: {
+        bgHint: "Puoi uscire dall'app: il download continua in background", bgTitle: "Download in corso: {n}", bgDoneTitle: "Salvato in Video Tool", bgFailTitle: "Download non riuscito",
         searchPlaceholder: "Cerca un video…", searchBtn: "Cerca", searchHint: "Trovato un video? Tocca Condividi → Video Tool e si apre qui pronto da scaricare.",
         openSource: "Apri originale",
         watchNow: "Guarda ora", shareShort: "Condividi", inLibraryNote: "Salvato nella tua libreria qui sotto", directStarted: "Download in corso nei download del browser",
@@ -212,6 +220,7 @@ const I18N = {
         time: { few: 'pochi secondi', half: 'mezzo minuto', min: n => n === 1 ? '1 minuto' : n + ' minuti', hour: n => n === 1 ? '1 ora' : n + ' ore', and: ' e ' }
     },
     ru: {
+        bgHint: "Можно выйти из приложения — загрузка продолжится в фоне", bgTitle: "Загрузка: {n}", bgDoneTitle: "Сохранено в Video Tool", bgFailTitle: "Ошибка загрузки",
         searchPlaceholder: "Найти видео…", searchBtn: "Найти", searchHint: "Нашли видео? Нажмите «Поделиться» → Video Tool, и оно откроется здесь для скачивания.",
         openSource: "Открыть источник",
         watchNow: "Смотреть", shareShort: "Поделиться", inLibraryNote: "Сохранено в библиотеке ниже", directStarted: "Загрузка идёт в загрузках браузера",
@@ -234,6 +243,7 @@ const I18N = {
         time: { few: 'несколько секунд', half: 'полминуты', min: n => n + ' ' + plural3(n, 'минута', 'минуты', 'минут'), hour: n => n + ' ' + plural3(n, 'час', 'часа', 'часов'), and: ' ' }
     },
     tr: {
+        bgHint: "Uygulamadan çıkabilirsin – indirme arka planda devam eder", bgTitle: "İndiriliyor: {n}", bgDoneTitle: "Video Tool'a kaydedildi", bgFailTitle: "İndirme başarısız",
         searchPlaceholder: "Video ara…", searchBtn: "Ara", searchHint: "Video buldun mu? Paylaş → Video Tool'a dokun, burada indirmeye hazır açılır.",
         openSource: "Kaynağı aç",
         watchNow: "Şimdi izle", shareShort: "Paylaş", inLibraryNote: "Aşağıdaki kitaplığına kaydedildi", directStarted: "Tarayıcı indirmelerinde iniyor",
@@ -256,6 +266,7 @@ const I18N = {
         time: { few: 'birkaç saniye', half: 'yarım dakika', min: n => n + ' dakika', hour: n => n + ' saat', and: ' ' }
     },
     fa: {
+        bgHint: "می‌توانید از برنامه خارج شوید – دانلود در پس‌زمینه ادامه دارد", bgTitle: "در حال دانلود: {n}", bgDoneTitle: "در Video Tool ذخیره شد", bgFailTitle: "دانلود ناموفق بود",
         searchPlaceholder: "جستجوی ویدیو…", searchBtn: "جستجو", searchHint: "ویدیو پیدا کردید؟ «اشتراک» ← Video Tool را بزنید تا اینجا آماده دانلود باز شود.",
         openSource: "باز کردن منبع",
         watchNow: "تماشا", shareShort: "اشتراک", inLibraryNote: "در کتابخانه پایین ذخیره شد", directStarted: "در دانلودهای مرورگر در حال دانلود است",
@@ -278,6 +289,7 @@ const I18N = {
         time: { few: 'چند ثانیه', half: 'نیم دقیقه', min: n => n + ' دقیقه', hour: n => n + ' ساعت', and: ' و ' }
     },
     ur: {
+        bgHint: "آپ ایپ سے نکل سکتے ہیں – ڈاؤن لوڈ پس منظر میں جاری رہے گا", bgTitle: "ڈاؤن لوڈ ہو رہا ہے: {n}", bgDoneTitle: "Video Tool میں محفوظ", bgFailTitle: "ڈاؤن لوڈ ناکام",
         searchPlaceholder: "ویڈیو تلاش کریں…", searchBtn: "تلاش", searchHint: "ویڈیو مل گئی؟ شیئر ← Video Tool دبائیں، یہاں ڈاؤن لوڈ کے لیے کھل جائے گی۔",
         openSource: "اصل لنک کھولیں",
         watchNow: "ابھی دیکھیں", shareShort: "شیئر", inLibraryNote: "نیچے آپ کی لائبریری میں محفوظ", directStarted: "براؤزر کے ڈاؤن لوڈز میں ڈاؤن لوڈ ہو رہا ہے",
@@ -300,6 +312,7 @@ const I18N = {
         time: { few: 'چند سیکنڈ', half: 'آدھا منٹ', min: n => n + ' منٹ', hour: n => n + ' گھنٹے', and: ' اور ' }
     },
     hi: {
+        bgHint: "आप ऐप से बाहर जा सकते हैं – डाउनलोड बैकग्राउंड में चलता रहेगा", bgTitle: "डाउनलोड हो रहा है: {n}", bgDoneTitle: "Video Tool में सेव हो गया", bgFailTitle: "डाउनलोड विफल",
         searchPlaceholder: "वीडियो खोजें…", searchBtn: "खोजें", searchHint: "वीडियो मिला? शेयर → Video Tool दबाएँ, यहीं डाउनलोड के लिए खुल जाएगा।",
         openSource: "मूल खोलें",
         watchNow: "अभी देखें", shareShort: "शेयर", inLibraryNote: "नीचे आपकी लाइब्रेरी में सेव", directStarted: "ब्राउज़र के डाउनलोड में डाउनलोड हो रहा है",
@@ -322,6 +335,7 @@ const I18N = {
         time: { few: 'कुछ सेकंड', half: 'आधा मिनट', min: n => n + ' मिनट', hour: n => n + ' घंटे', and: ' ' }
     },
     bn: {
+        bgHint: "অ্যাপ থেকে বের হতে পারেন – ডাউনলোড ব্যাকগ্রাউন্ডে চলবে", bgTitle: "ডাউনলোড হচ্ছে: {n}", bgDoneTitle: "Video Tool-এ সেভ হয়েছে", bgFailTitle: "ডাউনলোড ব্যর্থ",
         searchPlaceholder: "ভিডিও খুঁজুন…", searchBtn: "খুঁজুন", searchHint: "ভিডিও পেয়েছেন? শেয়ার → Video Tool চাপুন, এখানে ডাউনলোডের জন্য খুলবে।",
         openSource: "মূল লিংক খুলুন",
         watchNow: "এখনই দেখুন", shareShort: "শেয়ার", inLibraryNote: "নিচে আপনার লাইব্রেরিতে সেভ হয়েছে", directStarted: "ব্রাউজারের ডাউনলোডে ডাউনলোড হচ্ছে",
@@ -344,6 +358,7 @@ const I18N = {
         time: { few: 'কয়েক সেকেন্ড', half: 'আধা মিনিট', min: n => n + ' মিনিট', hour: n => n + ' ঘণ্টা', and: ' ' }
     },
     id: {
+        bgHint: "Kamu bisa keluar dari aplikasi – unduhan tetap berjalan di latar belakang", bgTitle: "Mengunduh: {n}", bgDoneTitle: "Tersimpan di Video Tool", bgFailTitle: "Unduhan gagal",
         searchPlaceholder: "Cari video…", searchBtn: "Cari", searchHint: "Ketemu video? Ketuk Bagikan → Video Tool, langsung terbuka di sini siap diunduh.",
         openSource: "Buka sumber",
         watchNow: "Tonton", shareShort: "Bagikan", inLibraryNote: "Tersimpan di pustaka di bawah", directStarted: "Mengunduh di unduhan browser",
@@ -366,6 +381,7 @@ const I18N = {
         time: { few: 'beberapa detik', half: 'setengah menit', min: n => n + ' menit', hour: n => n + ' jam', and: ' ' }
     },
     vi: {
+        bgHint: "Bạn có thể thoát ứng dụng – việc tải vẫn tiếp tục chạy nền", bgTitle: "Đang tải: {n}", bgDoneTitle: "Đã lưu vào Video Tool", bgFailTitle: "Tải thất bại",
         searchPlaceholder: "Tìm video…", searchBtn: "Tìm", searchHint: "Tìm thấy video? Nhấn Chia sẻ → Video Tool, video sẽ mở ở đây sẵn sàng tải.",
         openSource: "Mở nguồn gốc",
         watchNow: "Xem ngay", shareShort: "Chia sẻ", inLibraryNote: "Đã lưu trong thư viện bên dưới", directStarted: "Đang tải trong mục tải xuống của trình duyệt",
@@ -388,6 +404,7 @@ const I18N = {
         time: { few: 'vài giây', half: 'nửa phút', min: n => n + ' phút', hour: n => n + ' giờ', and: ' ' }
     },
     th: {
+        bgHint: "ออกจากแอปได้เลย – การดาวน์โหลดจะทำงานต่อเบื้องหลัง", bgTitle: "กำลังดาวน์โหลด: {n}", bgDoneTitle: "บันทึกใน Video Tool แล้ว", bgFailTitle: "ดาวน์โหลดไม่สำเร็จ",
         searchPlaceholder: "ค้นหาวิดีโอ…", searchBtn: "ค้นหา", searchHint: "เจอวิดีโอแล้ว? แตะแชร์ → Video Tool แล้วจะเปิดที่นี่พร้อมดาวน์โหลด",
         openSource: "เปิดต้นฉบับ",
         watchNow: "ดูเลย", shareShort: "แชร์", inLibraryNote: "บันทึกไว้ในคลังด้านล่างแล้ว", directStarted: "กำลังดาวน์โหลดในรายการดาวน์โหลดของเบราว์เซอร์",
@@ -410,6 +427,7 @@ const I18N = {
         time: { few: 'ไม่กี่วินาที', half: 'ครึ่งนาที', min: n => n + ' นาที', hour: n => n + ' ชั่วโมง', and: ' ' }
     },
     zh: {
+        bgHint: "可以离开应用——下载会在后台继续", bgTitle: "正在下载：{n}", bgDoneTitle: "已保存到 Video Tool", bgFailTitle: "下载失败",
         searchPlaceholder: "搜索视频…", searchBtn: "搜索", searchHint: "找到视频了？点“分享”→ Video Tool，就会在这里打开，准备下载。",
         openSource: "打开原链接",
         watchNow: "立即观看", shareShort: "分享", inLibraryNote: "已保存到下方的媒体库", directStarted: "正在浏览器下载中下载",
@@ -432,6 +450,7 @@ const I18N = {
         time: { few: '几秒', half: '半分钟', min: n => n + ' 分钟', hour: n => n + ' 小时', and: ' ' }
     },
     ja: {
+        bgHint: "アプリを閉じてもダウンロードはバックグラウンドで続きます", bgTitle: "ダウンロード中：{n}", bgDoneTitle: "Video Tool に保存しました", bgFailTitle: "ダウンロードに失敗しました",
         searchPlaceholder: "動画を検索…", searchBtn: "検索", searchHint: "動画が見つかったら「共有」→ Video Tool をタップ。ここで開いてすぐダウンロードできます。",
         openSource: "元のページを開く",
         watchNow: "今すぐ見る", shareShort: "共有", inLibraryNote: "下のライブラリに保存しました", directStarted: "ブラウザのダウンロードで保存中",
@@ -454,6 +473,7 @@ const I18N = {
         time: { few: '数秒', half: '30秒', min: n => n + '分', hour: n => n + '時間', and: '' }
     },
     ko: {
+        bgHint: "앱을 나가도 다운로드는 백그라운드에서 계속돼요", bgTitle: "다운로드 중: {n}", bgDoneTitle: "Video Tool에 저장했어요", bgFailTitle: "다운로드 실패",
         searchPlaceholder: "동영상 검색…", searchBtn: "검색", searchHint: "동영상을 찾았나요? 공유 → Video Tool을 누르면 여기서 바로 다운로드할 수 있어요.",
         openSource: "원본 열기",
         watchNow: "지금 보기", shareShort: "공유", inLibraryNote: "아래 보관함에 저장했어요", directStarted: "브라우저 다운로드에서 받는 중",

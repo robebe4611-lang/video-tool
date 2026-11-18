@@ -143,6 +143,7 @@
             <span id="sizeText"></span>
             <span id="speedText"></span>
         </div>
+        <p id="bgHint" class="hidden text-xs text-emerald-400/80 mt-3 text-center" data-t="bgHint"></p>
         <button onclick="cancelDownload()" id="cancelBtn" class="press w-full mt-4 border border-zinc-800 hover:bg-zinc-800 py-2.5 rounded-xl text-sm text-zinc-300" data-t="cancel"></button>
     </section>
 
@@ -524,12 +525,17 @@ function startDownload() {
     });
 }
 
-async function runDownload({ url, quality, start, end, est, suffix = '' }) {
+async function runDownload({ url, quality, start, end, est, suffix = '', noBg = false }) {
     const params = new URLSearchParams({ url, quality, start, end });
     const liveUrl = '/api/live?' + params;
 
+    // Best: Background Fetch - keeps downloading even after leaving the app (Chrome on Android)
+    const reg = noBg ? null : await bgRegistration();
+    if (reg) return bgDownload(reg, { liveUrl, url, quality, est, suffix, start, end });
+
     // Browsers without in-app storage: let the browser download it directly (still streams)
     if (!hasOPFS()) { location.href = liveUrl; showStatus(t('directStarted')); return; }
+    $('bgHint').classList.add('hidden');
 
     $('downloadBtn').disabled = true;
     $('doneBox').classList.add('hidden');
@@ -605,8 +611,138 @@ function showProgress(got) {
 }
 
 function cancelDownload() {
-    if (live) live.ctrl.abort();
+    if (!live) return;
+    if (live.bg) {
+        live.bg.abort().catch(() => {});
+        live = null;
+        $('progressBox').classList.add('hidden');
+        $('downloadBtn').disabled = false;
+        showStatus(t('cancelled'));
+    } else live.ctrl.abort();
 }
+
+/* ---------- background downloads (continue when the app is closed) ---------- */
+const FILES_CACHE = 'library-files';
+
+async function bgRegistration() {
+    try {
+        if (!('serviceWorker' in navigator) || !('BackgroundFetchManager' in window)) return null;
+        const reg = await navigator.serviceWorker.ready;
+        return reg.backgroundFetch ? reg : null;
+    } catch { return null; }
+}
+
+async function bgDownload(reg, { liveUrl, url, quality, est, suffix, start, end }) {
+    const id = 'dl-' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+    const ext = quality === 'mp3' ? '.mp3' : '.mp4';
+    const name = ((info && info.title) || 'video') + ext;
+    $('downloadBtn').disabled = true;
+    $('doneBox').classList.add('hidden');
+    $('progressBox').classList.remove('hidden');
+    $('bgHint').classList.remove('hidden');
+    showStatus('');
+    try {
+        const cache = await caches.open(FILES_CACHE);
+        await cache.put('/lib-pending/' + id, new Response(JSON.stringify({
+            src: url, quality, name, suffix, est,
+            doneText: t('bgDoneTitle'), failText: t('bgFailTitle')
+        })));
+        const bg = await reg.backgroundFetch.fetch(id, [liveUrl], {
+            title: t('bgTitle', { n: name }),
+            icons: [{ src: '/icon-192.png', sizes: '192x192', type: 'image/png' }]
+        });
+        watchBg(bg, est);
+        // Watchdog: if the phone doesn't start the background download, use the in-app one instead
+        setTimeout(() => {
+            if (live && live.bg === bg && !bg.downloaded && bg.result === '') {
+                console.warn('background fetch stalled - falling back');
+                bg.abort().catch(() => {});
+                live = null;
+                $('bgHint').classList.add('hidden');
+                runDownload({ url, quality, start, end, est, suffix, noBg: true });
+            }
+        }, 15000);
+    } catch (e) {
+        // Background download refused (permissions, storage...) - fall back to the in-app download
+        console.warn('background fetch unavailable:', e);
+        $('bgHint').classList.add('hidden');
+        return runDownload({ url, quality, start, end, est, suffix, noBg: true });
+    }
+}
+
+function watchBg(bg, est) {
+    live = { bg, est: est || 0, t0: Date.now(), samples: [], audio: false, got: bg.downloaded || 0 };
+    $('progressBox').classList.remove('hidden');
+    $('bgHint').classList.remove('hidden');
+    $('downloadBtn').disabled = true;
+    showProgress(live.got);
+    bg.addEventListener('progress', async () => {
+        if (!live || live.bg !== bg) return;
+        live.got = bg.downloaded;
+        showProgress(live.got);
+        if (bg.result === 'failure') {
+            live = null;
+            $('progressBox').classList.add('hidden');
+            $('downloadBtn').disabled = false;
+            showStatus(t('failed') + (bg.failureReason || ''), true);
+        }
+    });
+}
+
+// Pull downloads that finished in the background into the library list
+async function syncBackground() {
+    try {
+        const cache = await caches.open(FILES_CACHE);
+        const keys = await cache.keys();
+        const added = [];
+        const list = libLoad();
+        for (const req of keys) {
+            const path = new URL(req.url).pathname;
+            if (!path.startsWith('/lib-meta/')) continue;
+            const meta = await (await cache.match(req)).json();
+            if (!list.some(x => x.id === meta.id)) { list.unshift(meta); added.push(meta); }
+            await cache.delete(req);
+        }
+        if (added.length) { libStore(list); renderLibrary(); }
+        return added;
+    } catch { return []; }
+}
+
+if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.addEventListener('message', async e => {
+        const msg = e.data || {};
+        if (msg.type === 'bg-done') {
+            const added = await syncBackground();
+            const item = added.find(x => x.id === msg.id);
+            if (live && live.bg && live.bg.id === msg.id) { live = null; if (item) showDone(item); }
+        } else if (msg.type === 'bg-fail' && live && live.bg && live.bg.id === msg.id) {
+            live = null;
+            $('progressBox').classList.add('hidden');
+            $('downloadBtn').disabled = false;
+            showStatus(t('bgFailTitle'), true);
+        }
+    });
+}
+
+// When coming back to the app: add finished downloads, and re-attach to one still running
+async function resumeBackground() {
+    await syncBackground();
+    const reg = await bgRegistration();
+    if (!reg || live) return;
+    try {
+        const ids = await reg.backgroundFetch.getIds();
+        for (const id of ids) {
+            const bg = await reg.backgroundFetch.get(id);
+            if (bg && bg.result === '') {
+                let est = 0;
+                try { const p = await (await caches.open(FILES_CACHE)).match('/lib-pending/' + id); if (p) est = (await p.json()).est || 0; } catch {}
+                watchBg(bg, est);
+                break;
+            }
+        }
+    } catch {}
+}
+document.addEventListener('visibilitychange', () => { if (!document.hidden) resumeBackground(); });
 
 function showDone(item) {
     $('progressBox').classList.add('hidden');
@@ -665,6 +801,12 @@ async function shareItem(id) {
 }
 
 async function libFile(item) {
+    if (item.storage === 'cache') {
+        const res = await (await caches.open(FILES_CACHE)).match(item.key);
+        if (!res) throw new Error('missing');
+        const blob = await res.blob();
+        return new File([blob], item.name, { type: blob.type || (item.name.endsWith('.mp3') ? 'audio/mpeg' : 'video/mp4') });
+    }
     const dir = await libDir();
     return (await dir.getFileHandle(item.file)).getFile();
 }
@@ -706,7 +848,10 @@ async function exportItem(id) {
 async function deleteItem(id) {
     const item = libLoad().find(x => x.id === id);
     if (!item || !confirm(t('deleteConfirm'))) return;
-    try { (await libDir()).removeEntry(item.file); } catch {}
+    try {
+        if (item.storage === 'cache') await (await caches.open(FILES_CACHE)).delete(item.key);
+        else (await libDir()).removeEntry(item.file);
+    } catch {}
     libStore(libLoad().filter(x => x.id !== id));
     renderLibrary();
 }
@@ -755,6 +900,7 @@ function webSearch() {
 
 setLang(detectLang());
 renderLibrary();
+resumeBackground();
 // Opened from Android "Share" -> this app: pick the link out of the shared text and load it
 (function receiveShared() {
     try {
