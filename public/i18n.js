@@ -35,6 +35,7 @@ const RTL = ['he', 'ar', 'fa', 'ur'];
 
 const I18N = {
     en: {
+        brokenRetry: "The background download was damaged – downloading it again now. Please keep the app open.",
         brokenFile: "This file is damaged (the download was interrupted). Delete it and download again.",
         bgHint: "You can leave the app – the download continues in the background", bgTitle: "Downloading: {n}", bgDoneTitle: "Saved in Video Tool", bgFailTitle: "Download failed",
         searchPlaceholder: "Search for a video…", searchBtn: "Search", searchHint: "Found a video? Tap Share → Video Tool, and it opens here ready to download.",
@@ -60,6 +61,7 @@ const I18N = {
         time: { few: 'a few seconds', half: 'half a minute', min: n => n === 1 ? '1 minute' : n + ' minutes', hour: n => n === 1 ? '1 hour' : n + ' hours', and: ' ' }
     },
     he: {
+        brokenRetry: "ההורדה ברקע יצאה פגומה – מוריד שוב עכשיו. השאר את האפליקציה פתוחה.",
         brokenFile: "הקובץ פגום (ההורדה נקטעה). מחק אותו והורד שוב.",
         bgHint: "אפשר לצאת מהאפליקציה – ההורדה ממשיכה ברקע", bgTitle: "מוריד: {n}", bgDoneTitle: "נשמר ב-Video Tool", bgFailTitle: "ההורדה נכשלה",
         searchPlaceholder: "חפש סרטון…", searchBtn: "חפש", searchHint: "מצאת סרטון? לחץ שתף ← Video Tool, והוא ייפתח כאן מוכן להורדה.",
@@ -84,6 +86,7 @@ const I18N = {
         time: { few: 'כמה שניות', half: 'חצי דקה', min: n => n === 1 ? 'דקה' : n === 2 ? 'שתי דקות' : n + ' דקות', hour: n => n === 1 ? 'שעה' : n === 2 ? 'שעתיים' : n + ' שעות', and: ' ו-' }
     },
     ar: {
+        brokenRetry: "التنزيل في الخلفية تلف – جارٍ التنزيل من جديد. أبقِ التطبيق مفتوحًا.",
         brokenFile: "الملف تالف (انقطع التنزيل). احذفه ونزّله من جديد.",
         bgHint: "يمكنك مغادرة التطبيق – التنزيل يستمر في الخلفية", bgTitle: "جارٍ التنزيل: {n}", bgDoneTitle: "تم الحفظ في Video Tool", bgFailTitle: "فشل التنزيل",
         searchPlaceholder: "ابحث عن فيديو…", searchBtn: "بحث", searchHint: "وجدت فيديو؟ اضغط مشاركة ← Video Tool، وسيفتح هنا جاهزًا للتنزيل.",
@@ -108,6 +111,7 @@ const I18N = {
         time: { few: 'بضع ثوانٍ', half: 'نصف دقيقة', min: n => n === 1 ? 'دقيقة' : n === 2 ? 'دقيقتان' : n <= 10 ? n + ' دقائق' : n + ' دقيقة', hour: n => n === 1 ? 'ساعة' : n === 2 ? 'ساعتان' : n <= 10 ? n + ' ساعات' : n + ' ساعة', and: ' و' }
     },
     es: {
+        brokenRetry: "La descarga en segundo plano se dañó; descargando de nuevo. Mantén la app abierta.",
         brokenFile: "El archivo está dañado (la descarga se interrumpió). Elimínalo y descárgalo de nuevo.",
         bgHint: "Puedes salir de la app: la descarga sigue en segundo plano", bgTitle: "Descargando: {n}", bgDoneTitle: "Guardado en Video Tool", bgFailTitle: "Error en la descarga",
         searchPlaceholder: "Busca un vídeo…", searchBtn: "Buscar", searchHint: "¿Encontraste un vídeo? Pulsa Compartir → Video Tool y se abrirá aquí listo para descargar.",
@@ -132,6 +136,7 @@ const I18N = {
         time: { few: 'unos segundos', half: 'medio minuto', min: n => n === 1 ? '1 minuto' : n + ' minutos', hour: n => n === 1 ? '1 hora' : n + ' horas', and: ' y ' }
     },
     pt: {
+        brokenRetry: "O download em segundo plano veio danificado; baixando de novo. Mantenha o app aberto.",
         brokenFile: "O arquivo está danificado (o download foi interrompido). Exclua e baixe de novo.",
         bgHint: "Você pode sair do app – o download continua em segundo plano", bgTitle: "Baixando: {n}", bgDoneTitle: "Salvo no Video Tool", bgFailTitle: "Falha no download",
         searchPlaceholder: "Procure um vídeo…", searchBtn: "Buscar", searchHint: "Achou um vídeo? Toque em Compartilhar → Video Tool e ele abre aqui pronto para baixar.",
@@ -156,6 +161,7 @@ const I18N = {
         time: { few: 'alguns segundos', half: 'meio minuto', min: n => n === 1 ? '1 minuto' : n + ' minutos', hour: n => n === 1 ? '1 hora' : n + ' horas', and: ' e ' }
     },
     fr: {
+        brokenRetry: "Le téléchargement en arrière-plan est endommagé ; nouveau téléchargement en cours. Gardez l'app ouverte.",
         brokenFile: "Le fichier est endommagé (téléchargement interrompu). Supprimez-le et retéléchargez-le.",
         bgHint: "Vous pouvez quitter l'app – le téléchargement continue en arrière-plan", bgTitle: "Téléchargement : {n}", bgDoneTitle: "Enregistré dans Video Tool", bgFailTitle: "Échec du téléchargement",
         searchPlaceholder: "Rechercher une vidéo…", searchBtn: "Chercher", searchHint: "Vidéo trouvée ? Touchez Partager → Video Tool, elle s'ouvre ici prête à télécharger.",
@@ -180,6 +186,7 @@ const I18N = {
         time: { few: 'quelques secondes', half: 'une demi-minute', min: n => n === 1 ? '1 minute' : n + ' minutes', hour: n => n === 1 ? '1 heure' : n + ' heures', and: ' et ' }
     },
     de: {
+        brokenRetry: "Der Hintergrund-Download war beschädigt – lädt jetzt neu. Bitte App offen lassen.",
         brokenFile: "Die Datei ist beschädigt (Download unterbrochen). Lösche sie und lade sie neu.",
         bgHint: "Du kannst die App verlassen – der Download läuft im Hintergrund weiter", bgTitle: "Lädt: {n}", bgDoneTitle: "In Video Tool gespeichert", bgFailTitle: "Download fehlgeschlagen",
         searchPlaceholder: "Nach einem Video suchen…", searchBtn: "Suchen", searchHint: "Video gefunden? Tippe auf Teilen → Video Tool, und es öffnet sich hier zum Download.",
@@ -204,6 +211,7 @@ const I18N = {
         time: { few: 'wenige Sekunden', half: 'eine halbe Minute', min: n => n === 1 ? '1 Minute' : n + ' Minuten', hour: n => n === 1 ? '1 Stunde' : n + ' Stunden', and: ' und ' }
     },
     it: {
+        brokenRetry: "Il download in background è danneggiato: lo riscarico ora. Tieni l'app aperta.",
         brokenFile: "Il file è danneggiato (download interrotto). Eliminalo e scaricalo di nuovo.",
         bgHint: "Puoi uscire dall'app: il download continua in background", bgTitle: "Download in corso: {n}", bgDoneTitle: "Salvato in Video Tool", bgFailTitle: "Download non riuscito",
         searchPlaceholder: "Cerca un video…", searchBtn: "Cerca", searchHint: "Trovato un video? Tocca Condividi → Video Tool e si apre qui pronto da scaricare.",
@@ -228,6 +236,7 @@ const I18N = {
         time: { few: 'pochi secondi', half: 'mezzo minuto', min: n => n === 1 ? '1 minuto' : n + ' minuti', hour: n => n === 1 ? '1 ora' : n + ' ore', and: ' e ' }
     },
     ru: {
+        brokenRetry: "Фоновая загрузка повреждена — скачиваем заново. Не закрывайте приложение.",
         brokenFile: "Файл повреждён (загрузка прервалась). Удалите его и скачайте снова.",
         bgHint: "Можно выйти из приложения — загрузка продолжится в фоне", bgTitle: "Загрузка: {n}", bgDoneTitle: "Сохранено в Video Tool", bgFailTitle: "Ошибка загрузки",
         searchPlaceholder: "Найти видео…", searchBtn: "Найти", searchHint: "Нашли видео? Нажмите «Поделиться» → Video Tool, и оно откроется здесь для скачивания.",
@@ -252,6 +261,7 @@ const I18N = {
         time: { few: 'несколько секунд', half: 'полминуты', min: n => n + ' ' + plural3(n, 'минута', 'минуты', 'минут'), hour: n => n + ' ' + plural3(n, 'час', 'часа', 'часов'), and: ' ' }
     },
     tr: {
+        brokenRetry: "Arka plan indirmesi bozuk çıktı – yeniden indiriliyor. Uygulamayı açık tut.",
         brokenFile: "Dosya bozuk (indirme yarıda kaldı). Silip yeniden indir.",
         bgHint: "Uygulamadan çıkabilirsin – indirme arka planda devam eder", bgTitle: "İndiriliyor: {n}", bgDoneTitle: "Video Tool'a kaydedildi", bgFailTitle: "İndirme başarısız",
         searchPlaceholder: "Video ara…", searchBtn: "Ara", searchHint: "Video buldun mu? Paylaş → Video Tool'a dokun, burada indirmeye hazır açılır.",
@@ -276,6 +286,7 @@ const I18N = {
         time: { few: 'birkaç saniye', half: 'yarım dakika', min: n => n + ' dakika', hour: n => n + ' saat', and: ' ' }
     },
     fa: {
+        brokenRetry: "دانلود پس‌زمینه خراب شد – دوباره دانلود می‌شود. برنامه را باز نگه دارید.",
         brokenFile: "فایل خراب است (دانلود قطع شد). آن را حذف کنید و دوباره دانلود کنید.",
         bgHint: "می‌توانید از برنامه خارج شوید – دانلود در پس‌زمینه ادامه دارد", bgTitle: "در حال دانلود: {n}", bgDoneTitle: "در Video Tool ذخیره شد", bgFailTitle: "دانلود ناموفق بود",
         searchPlaceholder: "جستجوی ویدیو…", searchBtn: "جستجو", searchHint: "ویدیو پیدا کردید؟ «اشتراک» ← Video Tool را بزنید تا اینجا آماده دانلود باز شود.",
@@ -300,6 +311,7 @@ const I18N = {
         time: { few: 'چند ثانیه', half: 'نیم دقیقه', min: n => n + ' دقیقه', hour: n => n + ' ساعت', and: ' و ' }
     },
     ur: {
+        brokenRetry: "پس منظر کا ڈاؤن لوڈ خراب ہو گیا – دوبارہ ڈاؤن لوڈ ہو رہا ہے۔ ایپ کھلی رکھیں۔",
         brokenFile: "فائل خراب ہے (ڈاؤن لوڈ رک گیا)۔ اسے حذف کر کے دوبارہ ڈاؤن لوڈ کریں۔",
         bgHint: "آپ ایپ سے نکل سکتے ہیں – ڈاؤن لوڈ پس منظر میں جاری رہے گا", bgTitle: "ڈاؤن لوڈ ہو رہا ہے: {n}", bgDoneTitle: "Video Tool میں محفوظ", bgFailTitle: "ڈاؤن لوڈ ناکام",
         searchPlaceholder: "ویڈیو تلاش کریں…", searchBtn: "تلاش", searchHint: "ویڈیو مل گئی؟ شیئر ← Video Tool دبائیں، یہاں ڈاؤن لوڈ کے لیے کھل جائے گی۔",
@@ -324,6 +336,7 @@ const I18N = {
         time: { few: 'چند سیکنڈ', half: 'آدھا منٹ', min: n => n + ' منٹ', hour: n => n + ' گھنٹے', and: ' اور ' }
     },
     hi: {
+        brokenRetry: "बैकग्राउंड डाउनलोड खराब हो गया – फिर से डाउनलोड हो रहा है। ऐप खुला रखें।",
         brokenFile: "फ़ाइल खराब है (डाउनलोड बीच में रुका)। इसे हटाकर फिर डाउनलोड करें।",
         bgHint: "आप ऐप से बाहर जा सकते हैं – डाउनलोड बैकग्राउंड में चलता रहेगा", bgTitle: "डाउनलोड हो रहा है: {n}", bgDoneTitle: "Video Tool में सेव हो गया", bgFailTitle: "डाउनलोड विफल",
         searchPlaceholder: "वीडियो खोजें…", searchBtn: "खोजें", searchHint: "वीडियो मिला? शेयर → Video Tool दबाएँ, यहीं डाउनलोड के लिए खुल जाएगा।",
@@ -348,6 +361,7 @@ const I18N = {
         time: { few: 'कुछ सेकंड', half: 'आधा मिनट', min: n => n + ' मिनट', hour: n => n + ' घंटे', and: ' ' }
     },
     bn: {
+        brokenRetry: "ব্যাকগ্রাউন্ড ডাউনলোড নষ্ট হয়েছে – আবার ডাউনলোড হচ্ছে। অ্যাপ খোলা রাখুন।",
         brokenFile: "ফাইলটি নষ্ট (ডাউনলোড থেমে গিয়েছিল)। মুছে আবার ডাউনলোড করুন।",
         bgHint: "অ্যাপ থেকে বের হতে পারেন – ডাউনলোড ব্যাকগ্রাউন্ডে চলবে", bgTitle: "ডাউনলোড হচ্ছে: {n}", bgDoneTitle: "Video Tool-এ সেভ হয়েছে", bgFailTitle: "ডাউনলোড ব্যর্থ",
         searchPlaceholder: "ভিডিও খুঁজুন…", searchBtn: "খুঁজুন", searchHint: "ভিডিও পেয়েছেন? শেয়ার → Video Tool চাপুন, এখানে ডাউনলোডের জন্য খুলবে।",
@@ -372,6 +386,7 @@ const I18N = {
         time: { few: 'কয়েক সেকেন্ড', half: 'আধা মিনিট', min: n => n + ' মিনিট', hour: n => n + ' ঘণ্টা', and: ' ' }
     },
     id: {
+        brokenRetry: "Unduhan latar belakang rusak – mengunduh ulang sekarang. Biarkan aplikasi tetap terbuka.",
         brokenFile: "File rusak (unduhan terputus). Hapus lalu unduh lagi.",
         bgHint: "Kamu bisa keluar dari aplikasi – unduhan tetap berjalan di latar belakang", bgTitle: "Mengunduh: {n}", bgDoneTitle: "Tersimpan di Video Tool", bgFailTitle: "Unduhan gagal",
         searchPlaceholder: "Cari video…", searchBtn: "Cari", searchHint: "Ketemu video? Ketuk Bagikan → Video Tool, langsung terbuka di sini siap diunduh.",
@@ -396,6 +411,7 @@ const I18N = {
         time: { few: 'beberapa detik', half: 'setengah menit', min: n => n + ' menit', hour: n => n + ' jam', and: ' ' }
     },
     vi: {
+        brokenRetry: "Bản tải chạy nền bị lỗi – đang tải lại. Hãy giữ ứng dụng mở.",
         brokenFile: "Tệp bị lỗi (quá trình tải bị gián đoạn). Hãy xóa và tải lại.",
         bgHint: "Bạn có thể thoát ứng dụng – việc tải vẫn tiếp tục chạy nền", bgTitle: "Đang tải: {n}", bgDoneTitle: "Đã lưu vào Video Tool", bgFailTitle: "Tải thất bại",
         searchPlaceholder: "Tìm video…", searchBtn: "Tìm", searchHint: "Tìm thấy video? Nhấn Chia sẻ → Video Tool, video sẽ mở ở đây sẵn sàng tải.",
@@ -420,6 +436,7 @@ const I18N = {
         time: { few: 'vài giây', half: 'nửa phút', min: n => n + ' phút', hour: n => n + ' giờ', and: ' ' }
     },
     th: {
+        brokenRetry: "การดาวน์โหลดเบื้องหลังเสียหาย – กำลังดาวน์โหลดใหม่ กรุณาเปิดแอปไว้",
         brokenFile: "ไฟล์เสียหาย (ดาวน์โหลดถูกขัดจังหวะ) ลบแล้วดาวน์โหลดใหม่",
         bgHint: "ออกจากแอปได้เลย – การดาวน์โหลดจะทำงานต่อเบื้องหลัง", bgTitle: "กำลังดาวน์โหลด: {n}", bgDoneTitle: "บันทึกใน Video Tool แล้ว", bgFailTitle: "ดาวน์โหลดไม่สำเร็จ",
         searchPlaceholder: "ค้นหาวิดีโอ…", searchBtn: "ค้นหา", searchHint: "เจอวิดีโอแล้ว? แตะแชร์ → Video Tool แล้วจะเปิดที่นี่พร้อมดาวน์โหลด",
@@ -444,6 +461,7 @@ const I18N = {
         time: { few: 'ไม่กี่วินาที', half: 'ครึ่งนาที', min: n => n + ' นาที', hour: n => n + ' ชั่วโมง', and: ' ' }
     },
     zh: {
+        brokenRetry: "后台下载的文件已损坏，正在重新下载，请保持应用打开。",
         brokenFile: "文件已损坏（下载中断）。请删除后重新下载。",
         bgHint: "可以离开应用——下载会在后台继续", bgTitle: "正在下载：{n}", bgDoneTitle: "已保存到 Video Tool", bgFailTitle: "下载失败",
         searchPlaceholder: "搜索视频…", searchBtn: "搜索", searchHint: "找到视频了？点“分享”→ Video Tool，就会在这里打开，准备下载。",
@@ -468,6 +486,7 @@ const I18N = {
         time: { few: '几秒', half: '半分钟', min: n => n + ' 分钟', hour: n => n + ' 小时', and: ' ' }
     },
     ja: {
+        brokenRetry: "バックグラウンドのダウンロードが壊れていたため、再ダウンロードしています。アプリを開いたままにしてください。",
         brokenFile: "ファイルが壊れています（ダウンロードが中断されました）。削除して再ダウンロードしてください。",
         bgHint: "アプリを閉じてもダウンロードはバックグラウンドで続きます", bgTitle: "ダウンロード中：{n}", bgDoneTitle: "Video Tool に保存しました", bgFailTitle: "ダウンロードに失敗しました",
         searchPlaceholder: "動画を検索…", searchBtn: "検索", searchHint: "動画が見つかったら「共有」→ Video Tool をタップ。ここで開いてすぐダウンロードできます。",
@@ -492,6 +511,7 @@ const I18N = {
         time: { few: '数秒', half: '30秒', min: n => n + '分', hour: n => n + '時間', and: '' }
     },
     ko: {
+        brokenRetry: "백그라운드 다운로드가 손상돼 다시 받는 중이에요. 앱을 열어 두세요.",
         brokenFile: "파일이 손상됐어요(다운로드 중단). 삭제하고 다시 다운로드하세요.",
         bgHint: "앱을 나가도 다운로드는 백그라운드에서 계속돼요", bgTitle: "다운로드 중: {n}", bgDoneTitle: "Video Tool에 저장했어요", bgFailTitle: "다운로드 실패",
         searchPlaceholder: "동영상 검색…", searchBtn: "검색", searchHint: "동영상을 찾았나요? 공유 → Video Tool을 누르면 여기서 바로 다운로드할 수 있어요.",

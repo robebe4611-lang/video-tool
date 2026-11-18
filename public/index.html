@@ -569,8 +569,14 @@ async function runDownload({ url, quality, start, end, est, suffix = '', noBg = 
         const item = { id, file: live.file, name, bytes: got, date: Date.now(), src: url, quality };
         const list = libLoad(); list.unshift(item); libStore(list);
         live = null;
-        showDone(item);
         renderLibrary();
+        if (await isPlayable(item)) showDone(item);
+        else {
+            await removeItem(item);
+            $('progressBox').classList.add('hidden');
+            $('downloadBtn').disabled = false;
+            showStatus(t('brokenFile'), true);
+        }
     } catch (e) {
         const cancelled = e.name === 'AbortError';
         try { if (live && live.writable) await live.writable.abort(); } catch {}
@@ -619,6 +625,43 @@ function cancelDownload() {
         $('downloadBtn').disabled = false;
         showStatus(t('cancelled'));
     } else live.ctrl.abort();
+}
+
+/* ---------- check a saved file really plays (catches interrupted / glued downloads) ---------- */
+async function isPlayable(item) {
+    try {
+        const file = await libFile(item);
+        if (!file.size) return false;
+        const url = URL.createObjectURL(file);
+        const v = document.createElement('video');
+        v.muted = true; v.preload = 'metadata';
+        const ok = await new Promise(resolve => {
+            const timer = setTimeout(() => resolve(true), 12000);   // slow phone: don't block, assume ok
+            v.onloadedmetadata = () => { clearTimeout(timer); resolve(v.duration > 0 || isFinite(v.duration) || v.duration === Infinity); };
+            v.onerror = () => { clearTimeout(timer); resolve(false); };
+            v.src = url;
+        });
+        v.removeAttribute('src'); v.load(); URL.revokeObjectURL(url);
+        return ok;
+    } catch { return false; }
+}
+
+async function removeItem(item) {
+    try {
+        if (item.storage === 'cache') await (await caches.open(FILES_CACHE)).delete(item.key);
+        else (await libDir()).removeEntry(item.file);
+    } catch {}
+    libStore(libLoad().filter(x => x.id !== item.id));
+    renderLibrary();
+}
+
+// Saved file is damaged: remove it and download again in the foreground (no background mode)
+async function verifyOrRetry(item) {
+    if (await isPlayable(item)) return true;
+    await removeItem(item);
+    showStatus(t('brokenRetry'), true);
+    if (item.src) runDownload({ url: item.src, quality: item.quality || '720', start: '', end: '', est: item.bytes || 0, noBg: true });
+    return false;
 }
 
 /* ---------- background downloads (continue when the app is closed) ---------- */
@@ -704,7 +747,9 @@ async function syncBackground() {
             await cache.delete(req);
         }
         if (added.length) { libStore(list); renderLibrary(); }
-        return added;
+        const good = [];
+        for (const it of added) if (await verifyOrRetry(it)) good.push(it);
+        return good;
     } catch { return []; }
 }
 
