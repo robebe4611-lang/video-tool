@@ -142,21 +142,23 @@
             <div class="min-w-0">
                 <p class="text-sm font-medium" data-t="readyTitle"></p>
                 <p id="doneName" class="text-xs text-zinc-500 truncate" dir="auto"></p>
+                <p class="text-xs text-emerald-400/80 mt-0.5" data-t="inLibraryNote"></p>
             </div>
         </div>
-        <button onclick="saveToLibrary()" id="libSaveBtn" class="press flex items-center justify-center gap-2 w-full bg-emerald-400 text-zinc-950 py-3.5 rounded-xl font-semibold disabled:opacity-60">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h6l2 2h8v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z"/><path d="M12 10v6"/><path d="m9 13 3 3 3-3"/></svg>
-            <span id="libSaveLabel" data-t="saveInTool"></span>
+        <button onclick="playItem(doneItemId)" class="press flex items-center justify-center gap-2 w-full bg-emerald-400 text-zinc-950 py-3.5 rounded-xl font-semibold">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+            <span data-t="watchNow"></span>
         </button>
-        <a id="saveLink" href="#" class="press flex items-center justify-center gap-2 w-full bg-zinc-800 hover:bg-zinc-700 py-3 rounded-xl text-sm">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg>
-            <span data-t="save"></span>
-        </a>
-        <button onclick="shareFile()" id="shareBtn" class="press flex items-center justify-center gap-2 w-full bg-zinc-800 hover:bg-zinc-700 py-3 rounded-xl text-sm">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.6 13.5 6.8 4M15.4 6.5l-6.8 4"/></svg>
-            <span id="shareLabel" data-t="share"></span>
-        </button>
-        <p id="doneHint" class="hidden text-xs text-zinc-500 text-center leading-relaxed" data-t="bigFileHint"></p>
+        <div class="grid grid-cols-2 gap-2">
+            <button onclick="exportItem(doneItemId)" class="press flex items-center justify-center gap-2 bg-zinc-800 hover:bg-zinc-700 py-3 rounded-xl text-sm">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg>
+                <span data-t="save"></span>
+            </button>
+            <button onclick="shareItem(doneItemId)" id="shareBtn" class="press flex items-center justify-center gap-2 bg-zinc-800 hover:bg-zinc-700 py-3 rounded-xl text-sm">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.6 13.5 6.8 4M15.4 6.5l-6.8 4"/></svg>
+                <span id="shareLabel" data-t="shareShort"></span>
+            </button>
+        </div>
         <button onclick="toggleCutPanel()" id="cutBtn" class="press flex items-center justify-center gap-2 w-full border border-zinc-800 hover:bg-zinc-800 py-3 rounded-xl text-sm text-zinc-300">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M20 4 8.12 15.88M14.47 14.48 20 20M8.12 8.12 12 12"/></svg>
             <span data-t="cutFile"></span>
@@ -243,7 +245,7 @@ const ICONS = {
 let lang = 'he';
 let info = null;            // last loaded video info
 let selected = '720';
-let currentJob = null, pollTimer = null, doneFileName = '', lastProgress = null;
+let lastProgress = null;
 
 const $ = id => document.getElementById(id);
 const t = (key, vars) => {
@@ -267,7 +269,7 @@ function setLang(l) {
     if (typeof renderLibrary === 'function') renderLibrary();
     renderOptions();
     renderVideoCard();
-    if (lastProgress) updateProgress(lastProgress);
+    if (live) showProgress(live.got || 0);
 }
 
 function renderLangList() {
@@ -424,6 +426,7 @@ function renderVideoCard(loading) {
 
 /* ---------- loading video info ---------- */
 let loadSeq = 0;
+let lastLoadedUrl = '';
 async function pasteAndLoad() {
     try {
         const text = await navigator.clipboard.readText();
@@ -435,6 +438,8 @@ async function loadPreview() {
     const url = $('videoUrl').value.trim();
     $('urlError').classList.add('hidden');
     if (!url) return;
+    if (url === lastLoadedUrl && info) return;   // same link already loaded - keep its info
+    lastLoadedUrl = url;
     const seq = ++loadSeq;
     info = null;
     renderVideoCard(true);
@@ -458,6 +463,7 @@ async function loadPreview() {
         renderOptions();
     } catch (e) {
         if (seq !== loadSeq) return;
+        lastLoadedUrl = '';
         renderVideoCard();
         $('urlError').textContent = t('error') + e.message;
         $('urlError').classList.remove('hidden');
@@ -468,229 +474,174 @@ $('videoUrl').addEventListener('change', loadPreview);
 $('videoUrl').addEventListener('paste', () => setTimeout(loadPreview, 50));
 ['startTime', 'endTime'].forEach(id => $(id).addEventListener('input', () => { renderOptions(); }));
 
-/* ---------- download job ---------- */
-/* ---------- trim after download ---------- */
-function toggleCutPanel() {
-    const panel = $('cutPanel');
-    const opening = panel.classList.contains('hidden');
-    panel.classList.toggle('hidden');
-    if (opening && doneJobId) {
-        const player = $('cutPlayer');
-        player.src = '/api/job/' + doneJobId + '/view';
-        player.onloadedmetadata = () => {
-            $('cutStart').value = '00:00:00';
-            $('cutEnd').value = formatTime(player.duration || 0);
-        };
-    }
-}
-function cutFromPlayer(id) { $(id).value = formatTime($('cutPlayer').currentTime); }
+/* ---------- streaming download: straight into the in-app library, while the server downloads ---------- */
+const LIB_KEY = 'library';
+let playerUrl = null;
+let live = null;               // { ctrl, writable, file, est, t0, samples }
+let doneItemId = null;
+let cutSource = null;          // library item being trimmed
 
-async function startCut() {
-    if (!doneJobId) return;
-    const s = toSec($('cutStart').value), e = toSec($('cutEnd').value);
-    if (isNaN(s) || isNaN(e) || e <= s) return showStatus(t('cutBadRange'), true);
-    const params = new URLSearchParams({ start: $('cutStart').value, end: $('cutEnd').value });
-    jobKind = 'cut';
-    $('cutPlayer').pause();
-    $('doneBox').classList.add('hidden');
-    $('progressBox').classList.remove('hidden');
-    $('cancelBtn').classList.remove('hidden');
-    $('downloadBtn').disabled = true;
-    updateProgress({ stage: 'חותך...', percent: 0 });
-    showStatus('');
-    try {
-        const res = await fetch('/api/job/' + doneJobId + '/trim?' + params);
-        const data = await res.json();
-        if (data.error) throw new Error(data.error);
-        currentJob = data.id;
-        poll();
-    } catch (err) { fail(err.message); }
+function libLoad() { try { return JSON.parse(localStorage.getItem(LIB_KEY)) || []; } catch { return []; } }
+function libStore(list) { try { localStorage.setItem(LIB_KEY, JSON.stringify(list)); } catch {} }
+const hasOPFS = () => !!(navigator.storage && navigator.storage.getDirectory && window.FileSystemFileHandle && 'createWritable' in FileSystemFileHandle.prototype);
+async function libDir() { return (await navigator.storage.getDirectory()).getDirectoryHandle('library', { create: true }); }
+
+function fileNameFrom(res, fallback) {
+    const cd = res.headers.get('content-disposition') || '';
+    const star = /filename\*=UTF-8''([^;]+)/i.exec(cd);
+    if (star) { try { return decodeURIComponent(star[1]); } catch {} }
+    const plain = /filename="([^"]+)"/i.exec(cd);
+    return plain ? plain[1] : fallback;
 }
 
-async function startDownload() {
-    jobKind = 'download';
+function startDownload() {
     const url = $('videoUrl').value.trim();
     if (!url) { $('urlError').textContent = t('needUrl'); $('urlError').classList.remove('hidden'); $('videoUrl').focus(); return; }
-
     const { full } = trimRange();
-    const params = new URLSearchParams({
-        url,
+    runDownload({
+        url, quality: selected,
         start: full ? '' : $('startTime').value,
         end: full ? '' : $('endTime').value,
-        quality: selected,
-        est: String(estimatedBytes(selected))
+        est: estimatedBytes(selected)
     });
+}
+
+async function runDownload({ url, quality, start, end, est, suffix = '' }) {
+    const params = new URLSearchParams({ url, quality, start, end });
+    const liveUrl = '/api/live?' + params;
+
+    // Browsers without in-app storage: let the browser download it directly (still streams)
+    if (!hasOPFS()) { location.href = liveUrl; showStatus(t('directStarted')); return; }
 
     $('downloadBtn').disabled = true;
     $('doneBox').classList.add('hidden');
     $('progressBox').classList.remove('hidden');
-    $('cancelBtn').classList.remove('hidden');
-    updateProgress({ stage: 'מתחבר לאתר...', percent: null });
     showStatus('');
+    const id = Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+    const ext = quality === 'mp3' ? '.mp3' : '.mp4';
+    const ctrl = new AbortController();
+    live = { ctrl, writable: null, file: id + ext, est: est || 0, t0: Date.now(), samples: [], audio: quality === 'mp3', got: 0 };
+    showProgress(0);
 
     try {
-        const res = await fetch('/api/job/start?' + params);
-        const data = await res.json();
-        if (data.error) throw new Error(data.error);
-        currentJob = data.id;
-        poll();
-    } catch (e) { fail(e.message); }
+        if (navigator.storage.persist) navigator.storage.persist().catch(() => {});
+        const dir = await libDir();
+        const writable = await (await dir.getFileHandle(live.file, { create: true })).createWritable();
+        live.writable = writable;
+        const res = await fetch(liveUrl, { signal: ctrl.signal });
+        if (!res.ok || !res.body) throw new Error((await res.text()).slice(0, 300) || ('HTTP ' + res.status));
+        let name = fileNameFrom(res, (info && info.title ? info.title : 'video') + ext);
+        if (suffix) name = name.replace(/(\.[a-z0-9]+)$/i, ' ' + suffix + '$1');
+        const counter = new TransformStream({
+            transform(chunk, c) { live.got += chunk.byteLength; c.enqueue(chunk); }
+        });
+        const tick = setInterval(() => showProgress(live ? live.got : 0), 500);
+        try { await res.body.pipeThrough(counter).pipeTo(writable); }
+        finally { clearInterval(tick); }
+
+        const got = live.got;
+        const elapsed = (Date.now() - live.t0) / 1000;
+        if (got > 1e6 && elapsed > 2) saveSpeed(got / elapsed);
+        const item = { id, file: live.file, name, bytes: got, date: Date.now(), src: url, quality };
+        const list = libLoad(); list.unshift(item); libStore(list);
+        live = null;
+        showDone(item);
+        renderLibrary();
+    } catch (e) {
+        const cancelled = e.name === 'AbortError';
+        try { if (live && live.writable) await live.writable.abort(); } catch {}
+        try { if (live) (await libDir()).removeEntry(live.file); } catch {}
+        live = null;
+        $('progressBox').classList.add('hidden');
+        $('downloadBtn').disabled = false;
+        if (cancelled) showStatus(t('cancelled'));
+        else showStatus(t('failed') + (e.name === 'QuotaExceededError' ? t('noSpace') : e.message), true);
+    }
 }
 
-function updateProgress(j) {
-    lastProgress = j;
-    $('stageText').textContent = STAGE_KEYS[j.stage] ? t(STAGE_KEYS[j.stage]) : (j.stage || '');
+function showProgress(got) {
+    if (!live) return;
+    const now = Date.now();
+    live.samples.push([now, got]);
+    while (live.samples.length > 2 && now - live.samples[0][0] > 6000) live.samples.shift();
+    const [t0, b0] = live.samples[0];
+    const rate = now > t0 ? (got - b0) / ((now - t0) / 1000) : 0;
+    const est = live.est;
+    const pct = est ? Math.min(99, got / est * 100) : null;
+    $('stageText').textContent = got ? t(live.audio ? 'st_audio' : 'st_video') : t('st_connecting');
     const bar = $('bar');
-    const hasPct = j.percent !== null && j.percent !== undefined;
-    if (hasPct) {
+    if (pct !== null && got) {
         bar.classList.remove('bar-indet');
-        bar.style.width = Math.min(100, j.percent) + '%';
-        $('percentText').textContent = Math.floor(j.percent) + '%';
+        bar.style.width = pct + '%';
+        $('percentText').textContent = Math.floor(pct) + '%';
     } else {
         bar.style.width = '100%';
         bar.classList.add('bar-indet');
         $('percentText').textContent = '';
     }
-    if (j.status === 'done') $('etaBig').textContent = t('st_done');
-    else if (j.eta && !(/^0?0:00$/.test(j.eta) && hasPct && j.percent < 95) && !isNaN(etaToSec(j.eta))) $('etaBig').textContent = t('left', { t: humanDuration(etaToSec(j.eta)) });
-    else if (j.elapsed && !hasPct) $('etaBig').textContent = t('elapsedT', { t: j.elapsed });
-    else $('etaBig').textContent = t('calc');
-    const done = formatBytes(j.bytes), total = formatBytes(j.total);
-    $('sizeText').textContent = done ? (total ? `${done} / ${total}` : done) : '';
-    $('speedText').textContent = j.speed || '';
-}
-
-async function poll() {
-    clearTimeout(pollTimer);
-    if (!currentJob) return;
-    try {
-        const res = await fetch('/api/job/' + currentJob);
-        const j = await res.json();
-        if (j.error && j.status !== 'error') throw new Error(j.error);
-        if (j.status === 'running') { updateProgress(j); pollTimer = setTimeout(poll, 800); }
-        else if (j.status === 'done') finish(j);
-        else if (j.status === 'error') fail(j.error);
-    } catch { pollTimer = setTimeout(poll, 2000); }
-}
-
-let jobKind = 'download';   // 'download' | 'cut'
-let doneJobId = null;
-
-function finish(j) {
-    if (jobKind === 'download' && j.bytes && j.elapsed > 2) saveSpeed(j.bytes / Math.max(1, j.elapsed - 1));
-    doneJobId = j.id;
-    doneMeta = { jobId: j.id, fileName: j.fileName, bytes: j.bytes || 0 };
-    $('libSaveBtn').disabled = false;
-    $('libSaveLabel').textContent = t('saveInTool');
-    $('cutPanel').classList.add('hidden');
-    $('cutPlayer').removeAttribute('src');
-    updateProgress({ ...j, percent: 100 });
-    $('progressBox').classList.add('hidden');
-    $('downloadBtn').disabled = false;
-    doneFileName = j.fileName;
-    // Sharing loads the whole file into the browser's memory - only reliable for small files
-    const big = (j.bytes || 0) > SHARE_LIMIT;
-    $('shareBtn').classList.toggle('hidden', big);
-    $('doneHint').classList.toggle('hidden', !big);
-    $('doneName').textContent = j.fileName + (j.bytes ? ' · ' + ltr(formatBytes(j.bytes)) : '');
-    $('saveLink').href = '/api/job/' + j.id + '/file';
-    $('doneBox').classList.remove('hidden');
-    lastProgress = null;
-    if (navigator.vibrate) navigator.vibrate(30);
-}
-
-function fail(msg) {
-    clearTimeout(pollTimer);
-    currentJob = null; lastProgress = null;
-    $('progressBox').classList.add('hidden');
-    $('downloadBtn').disabled = false;
-    showStatus(t('failed') + msg, true);
+    if (est && rate > 0 && got < est) $('etaBig').textContent = t('left', { t: humanDuration((est - got) / rate) });
+    else if (!got) $('etaBig').textContent = t('calc');
+    else $('etaBig').textContent = t('elapsedT', { t: Math.round((now - live.t0) / 1000) });
+    $('sizeText').textContent = got ? (est ? `${formatBytes(got)} / ${formatBytes(est)}` : formatBytes(got)) : '';
+    $('speedText').textContent = rate > 0 ? (rate / 1024 / 1024).toFixed(1) + ' MB/s' : '';
 }
 
 function cancelDownload() {
-    if (currentJob) fetch('/api/job/' + currentJob + '/cancel').catch(() => {});
-    clearTimeout(pollTimer);
-    currentJob = null; lastProgress = null;
+    if (live) live.ctrl.abort();
+}
+
+function showDone(item) {
     $('progressBox').classList.add('hidden');
     $('downloadBtn').disabled = false;
-    showStatus(t('cancelled'));
+    doneItemId = item.id;
+    $('doneName').textContent = item.name + ' · ' + ltr(formatBytes(item.bytes));
+    $('cutPanel').classList.add('hidden');
+    $('cutPlayer').removeAttribute('src');
+    $('doneBox').classList.remove('hidden');
+    if (navigator.vibrate) navigator.vibrate(30);
 }
 
-const SHARE_LIMIT = 60 * 1024 * 1024;
-async function shareFile() {
-    const href = $('saveLink').getAttribute('href');
-    const label = $('shareLabel');
-    $('shareBtn').disabled = true;
-    label.textContent = t('preparing');
+/* ---------- trim: pick times on the saved file, then fetch only that part from the source ---------- */
+async function toggleCutPanel() {
+    const panel = $('cutPanel');
+    const opening = panel.classList.contains('hidden');
+    panel.classList.toggle('hidden');
+    if (!opening) return;
+    cutSource = libLoad().find(x => x.id === doneItemId);
+    if (!cutSource) return;
     try {
-        const res = await fetch(href);
-        if (!res.ok) throw new Error(await res.text());
-        const blob = await res.blob();
-        const isAudio = doneFileName.toLowerCase().endsWith('.mp3');
-        const file = new File([blob], doneFileName, { type: isAudio ? 'audio/mpeg' : 'video/mp4' });
-        if (navigator.canShare && navigator.canShare({ files: [file] })) await navigator.share({ files: [file], title: doneFileName });
-        else location.href = href;
-    } catch (e) {
-        if (e.name !== 'AbortError') showStatus(t('shareFailed') + e.message, true);
-    } finally {
-        $('shareBtn').disabled = false;
-        label.textContent = t('share');
-    }
+        const file = await libFile(cutSource);
+        const player = $('cutPlayer');
+        if (player.dataset.url) URL.revokeObjectURL(player.dataset.url);
+        player.dataset.url = URL.createObjectURL(file);
+        player.src = player.dataset.url;
+        player.onloadedmetadata = () => { $('cutStart').value = '00:00:00'; $('cutEnd').value = formatTime(player.duration || 0); };
+    } catch { showStatus(t('fileGone'), true); }
+}
+function cutFromPlayer(id) { $(id).value = formatTime($('cutPlayer').currentTime); }
+
+function startCut() {
+    if (!cutSource || !cutSource.src) return showStatus(t('fileGone'), true);
+    const s = toSec($('cutStart').value), e = toSec($('cutEnd').value);
+    if (isNaN(s) || isNaN(e) || e <= s) return showStatus(t('cutBadRange'), true);
+    const dur = $('cutPlayer').duration || 0;
+    const est = dur ? Math.round(cutSource.bytes * (e - s) / dur) : 0;
+    $('cutPlayer').pause();
+    const tag = '(' + $('cutStart').value.replace(/:/g, '.') + '-' + $('cutEnd').value.replace(/:/g, '.') + ')';
+    runDownload({ url: cutSource.src, quality: cutSource.quality || '720', start: $('cutStart').value, end: $('cutEnd').value, est, suffix: tag });
 }
 
-
-/* ---------- library: keep files inside the tool (Origin Private File System on this device) ---------- */
-const LIB_KEY = 'library';
-let doneMeta = null;          // { jobId, fileName, bytes }
-let playerUrl = null;
-
-function libLoad() { try { return JSON.parse(localStorage.getItem(LIB_KEY)) || []; } catch { return []; } }
-function libStore(list) { try { localStorage.setItem(LIB_KEY, JSON.stringify(list)); } catch {} }
-const hasOPFS = () => !!(navigator.storage && navigator.storage.getDirectory);
-
-async function libDir() {
-    const root = await navigator.storage.getDirectory();
-    return root.getDirectoryHandle('library', { create: true });
-}
-
-async function saveToLibrary() {
-    if (!doneMeta) return;
-    if (!hasOPFS()) return showStatus(t('noLibrary'), true);
-    const btn = $('libSaveBtn'), label = $('libSaveLabel');
-    btn.disabled = true;
-    const id = Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
-    const ext = (doneMeta.fileName.match(/\.[a-z0-9]+$/i) || ['.mp4'])[0];
+const SHARE_LIMIT = 80 * 1024 * 1024;
+async function shareItem(id) {
+    const item = libLoad().find(x => x.id === id);
+    if (!item) return;
+    if (item.bytes > SHARE_LIMIT) return showStatus(t('bigFileHint'));
     try {
-        if (navigator.storage.persist) navigator.storage.persist().catch(() => {});
-        const dir = await libDir();
-        const fh = await dir.getFileHandle(id + ext, { create: true });
-        const writable = await fh.createWritable();
-        const res = await fetch('/api/job/' + doneMeta.jobId + '/file');
-        if (!res.ok || !res.body) throw new Error(t('fileGone'));
-        const total = +res.headers.get('content-length') || doneMeta.bytes || 0;
-        let got = 0, lastPct = -1;
-        // Native stream piping into the file: much faster than writing chunk by chunk
-        const counter = new TransformStream({
-            transform(chunk, ctrl) {
-                got += chunk.byteLength;
-                const pct = total ? Math.floor(got / total * 100) : -1;
-                if (pct !== lastPct) { lastPct = pct; label.textContent = t('savingInTool', { p: pct }); }
-                ctrl.enqueue(chunk);
-            }
-        });
-        await res.body.pipeThrough(counter).pipeTo(writable);
-        const list = libLoad();
-        list.unshift({ id, file: id + ext, name: doneMeta.fileName, bytes: got, date: Date.now() });
-        libStore(list);
-        label.textContent = t('savedInTool');
-        renderLibrary();
-        if (navigator.vibrate) navigator.vibrate(30);
-    } catch (e) {
-        try { (await libDir()).removeEntry(id + ext); } catch {}
-        label.textContent = t('saveInTool');
-        btn.disabled = false;
-        showStatus(t('failed') + (e.name === 'QuotaExceededError' ? t('noSpace') : e.message), true);
-    }
+        const file = await libFile(item);
+        const shareFile = new File([file], item.name, { type: file.type || (item.name.endsWith('.mp3') ? 'audio/mpeg' : 'video/mp4') });
+        if (navigator.canShare && navigator.canShare({ files: [shareFile] })) await navigator.share({ files: [shareFile], title: item.name });
+        else exportItem(id);
+    } catch (e) { if (e.name !== 'AbortError') showStatus(t('shareFailed') + e.message, true); }
 }
 
 async function libFile(item) {

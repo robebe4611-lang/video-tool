@@ -164,6 +164,111 @@ app.get('/api/preview', async (req, res) => {
     }
 });
 
+/* ---------------- Live streaming: bytes reach the phone while the server downloads ---------------- */
+
+function videoFormat(quality) {
+    return quality === 'mp3'
+        ? 'bestaudio/best'
+        : `bestvideo[height<=${quality}][vcodec^=avc1]+bestaudio[acodec^=mp4a]/best[height<=${quality}][ext=mp4]/bestvideo[height<=${quality}]+bestaudio/best[height<=${quality}]/best[ext=mp4]/best`;
+}
+
+// yt-dlp: resolve direct media URLs + the headers each one needs
+function resolveStreams(url, format, onProc) {
+    return new Promise((resolve, reject) => {
+        const p = spawn('yt-dlp', ['-J', '--no-warnings', '--no-playlist', '-f', format, ...cookieArgs(), '--', url],
+            { stdio: ['ignore', 'pipe', 'pipe'] });
+        onProc(p);
+        let out = '', err = '';
+        p.stdout.on('data', d => out += d);
+        p.stderr.on('data', d => err += d);
+        p.on('error', e => reject(new Error('yt-dlp not available: ' + e.message)));
+        p.on('close', code => {
+            if (code !== 0) return reject(new Error(shortError(err)));
+            try {
+                const info = JSON.parse(out);
+                const parts = info.requested_formats && info.requested_formats.length ? info.requested_formats : [info];
+                const streams = parts.filter(f => f.url).map(f => ({
+                    url: f.url, headers: f.http_headers || info.http_headers || {},
+                    vcodec: f.vcodec || '', acodec: f.acodec || ''
+                }));
+                if (!streams.length) return reject(new Error('No downloadable stream found'));
+                resolve({ info, streams });
+            } catch { reject(new Error('Parse error')); }
+        });
+    });
+}
+
+function inputArgs(stream, seek) {
+    const a = [...seek];
+    const h = { ...(stream.headers || {}) };
+    if (h['User-Agent']) { a.push('-user_agent', h['User-Agent']); delete h['User-Agent']; }
+    const rest = Object.entries(h);
+    if (rest.length) a.push('-headers', rest.map(([k, v]) => `${k}: ${v}`).join('\r\n') + '\r\n');
+    a.push('-reconnect', '1', '-reconnect_streamed', '1', '-reconnect_delay_max', '5', '-i', stream.url);
+    return a;
+}
+
+app.get('/api/live', async (req, res) => {
+    const { url, start = '', end = '', quality = '720' } = req.query;
+    if (!url || !isValidUrl(url)) return res.status(400).send('Invalid URL');
+    if (!ALLOWED_QUALITIES.includes(quality)) return res.status(400).send('Invalid quality');
+    if ((start && !TIME_RE.test(start)) || (end && !TIME_RE.test(end))) return res.status(400).send('Invalid time');
+
+    let aborted = false, child = null;
+    req.on('close', () => { aborted = true; if (child && child.exitCode === null) child.kill('SIGKILL'); });
+
+    let info, streams;
+    try {
+        ({ info, streams } = await resolveStreams(url, videoFormat(quality), p => child = p));
+    } catch (e) {
+        console.error('[live] resolve error:', e.message);
+        if (!res.headersSent) res.status(502).send(e.message);
+        return;
+    }
+    if (aborted) return;
+
+    const isAudio = quality === 'mp3';
+    const seek = [];
+    if (start && start !== '00:00:00') seek.push('-ss', start);
+    if (end && end !== '00:00:00') seek.push('-to', end);
+
+    const args = ['-hide_banner', '-loglevel', 'error', '-nostdin', ...inputArgs(streams[0], seek)];
+    const separateAudio = !isAudio && streams.length > 1;
+    if (separateAudio) args.push(...inputArgs(streams[1], seek), '-map', '0:v:0', '-map', '1:a:0');
+
+    if (isAudio) {
+        args.push('-vn', '-c:a', 'libmp3lame', '-q:a', '2', '-f', 'mp3', 'pipe:1');
+    } else {
+        // video is copied as-is (light on the small server); audio copied when already AAC
+        const audioCodec = (separateAudio ? streams[1].acodec : streams[0].acodec) || '';
+        args.push('-c:v', 'copy', '-c:a', /mp4a|aac/i.test(audioCodec) ? 'copy' : 'aac',
+            '-movflags', 'frag_keyframe+empty_moov+default_base_moof', '-f', 'mp4', 'pipe:1');
+    }
+
+    const ff = spawn('ffmpeg', args, { stdio: ['ignore', 'pipe', 'pipe'] });
+    child = ff;
+    let ffErr = '';
+    ff.stderr.on('data', d => { ffErr += d; });
+    ff.on('error', e => { if (!res.headersSent) res.status(500).send('ffmpeg not available: ' + e.message); });
+
+    const fileName = safeName(info.title) + (isAudio ? '.mp3' : '.mp4');
+    // headers only once real data flows, so a failure returns a clear error instead of an empty file
+    ff.stdout.once('data', first => {
+        if (aborted) return;
+        res.attachment(fileName);
+        res.setHeader('Content-Type', isAudio ? 'audio/mpeg' : 'video/mp4');
+        res.setHeader('Cache-Control', 'no-store');
+        res.setHeader('X-Accel-Buffering', 'no');
+        res.write(first);
+        ff.stdout.pipe(res);
+    });
+    ff.on('close', code => {
+        if (aborted) return;
+        if (code !== 0) console.error('[live] ffmpeg error:', ffErr.trim().split('\n').pop());
+        if (!res.headersSent) res.status(502).send(shortError(ffErr) || 'Stream failed');
+    });
+});
+
 /* ---------------- Download jobs with progress ---------------- */
 
 const jobs = new Map();
