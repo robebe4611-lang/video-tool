@@ -346,6 +346,7 @@ function humanDuration(sec) {
 }
 
 // Remember this device's typical download speed to predict time before downloading
+try { if (!localStorage.getItem('speedV2')) { localStorage.removeItem('speedBps'); localStorage.setItem('speedV2', '1'); } } catch {}
 function getSpeed() { try { return parseFloat(localStorage.getItem('speedBps')) || 0; } catch { return 0; } }
 function saveSpeed(bps) {
     if (!(bps > 0)) return;
@@ -583,7 +584,11 @@ async function followJob(a) {
         }
         if (j.status === 'error') return failActive(j.error || '');
         if (j.status === 'cancelled') return failActive(t('cancelled'));
-        if (j.status === 'done') { a.name = j.fileName; a.bytes = j.bytes; activeStore(a); break; }
+        if (j.status === 'done') {
+            a.name = j.fileName; a.bytes = j.bytes; activeStore(a);
+            if (j.bytes > 1e6 && j.elapsed > 3) saveSpeed(j.bytes / j.elapsed);
+            break;
+        }
         showServerProgress(j);
         await sleep(1000);
     }
@@ -685,8 +690,6 @@ async function pullToPhone(a, seq) {
     if (a.suffix) name = name.replace(/(\.[a-z0-9]+)$/i, ' ' + a.suffix + '$1');
     const file = await (await (await libDir()).getFileHandle(a.file)).getFile();
     const item = { id: a.id, file: a.file, name, bytes: file.size, date: Date.now(), src: a.url, quality: a.quality };
-    const elapsed = (Date.now() - live.t0) / 1000;
-    if (file.size > 1e6 && elapsed > 2) saveSpeed(file.size / elapsed);
     const list = libLoad(); list.unshift(item); libStore(list);
     activeStore(null); live = null;
     renderLibrary();
