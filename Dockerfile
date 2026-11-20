@@ -2,7 +2,7 @@ FROM node:22-bookworm-slim
 
 # ffmpeg + python (for yt-dlp)
 RUN apt-get update \
- && apt-get install -y --no-install-recommends ffmpeg python3 python3-venv ca-certificates \
+ && apt-get install -y --no-install-recommends ffmpeg aria2 python3 python3-venv ca-certificates \
  && rm -rf /var/lib/apt/lists/*
 
 # latest yt-dlp with browser impersonation (curl-cffi) - needed by many sites

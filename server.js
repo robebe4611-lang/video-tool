@@ -31,6 +31,11 @@ function isValidUrl(u) {
     }
 }
 
+// aria2c = many parallel connections per file: much faster on sites that limit speed per connection
+const HAS_ARIA = !process.env.NO_ARIA && (() => { try { return require('child_process').spawnSync('aria2c', ['--version']).status === 0; } catch { return false; } })();
+const ARIA_ARGS = ['--downloader', 'aria2c', '--downloader', 'dash,m3u8:native',
+    '--downloader-args', 'aria2c:-x 8 -s 8 -k 1M --file-allocation=none --summary-interval=1 --console-log-level=warn'];
+
 function cookieArgs() {
     return fs.existsSync(COOKIES_FILE) ? ['--cookies', COOKIES_FILE] : [];
 }
@@ -48,7 +53,7 @@ function safeName(name) {
 function dirSize(dir) {
     try {
         return fs.readdirSync(dir).reduce((sum, f) => {
-            try { return sum + fs.statSync(path.join(dir, f)).size; } catch { return sum; }
+            try { const st = fs.statSync(path.join(dir, f)); return sum + Math.min(st.size, (st.blocks || 0) * 512 || st.size); } catch { return sum; }
         }, 0);
     } catch { return 0; }
 }
@@ -361,7 +366,9 @@ app.get('/api/job/start', (req, res) => {
     };
     jobs.set(id, job);
 
-    const p = spawn('yt-dlp', args, { stdio: ['ignore', 'pipe', 'pipe'] });
+    const runJob = (useAria) => {
+    const fullArgs = useAria ? [...ARIA_ARGS, ...args] : args;
+    const p = spawn('yt-dlp', fullArgs, { stdio: ['ignore', 'pipe', 'pipe'] });
     job.proc = p;
     let errText = '';
     let buf = '';
@@ -403,6 +410,12 @@ app.get('/api/job/start', (req, res) => {
             .sort((a, b) => b.size - a.size);
         if (files.length) job.file = path.join(dir, files[0].f);
         if (code !== 0 || !job.file) {
+            if (useAria) {   // the site didn't like parallel connections: retry the normal way
+                console.error('[job] aria2c failed, retrying without it:', shortError(errText));
+                for (const f of fs.readdirSync(dir)) fs.rmSync(path.join(dir, f), { force: true, recursive: true });
+                job.file = null; job.percent = null; job.parts = 0; job.samples = [];
+                return runJob(false);
+            }
             job.status = 'error';
             job.error = shortError(errText) || 'ההורדה נכשלה';
             console.error('[job] error:', job.error);
@@ -414,6 +427,8 @@ app.get('/api/job/start', (req, res) => {
         job.stage = 'מוכן!';
         job.fileName = safeName(job.title) + path.extname(job.file);
     });
+    };
+    runJob(HAS_ARIA);
 
     res.json({ id });
 });
